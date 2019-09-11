@@ -1,0 +1,1 @@
+java -p bin\ -m compilador/pacotePrincipal.Compilador Teste.txt
