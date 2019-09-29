@@ -1,0 +1,97 @@
+/* Analisador Sintático para linguagem MLM */
+
+//Conecta este analisador sintático ao analisador léxico
+parser code {:
+    AnalisadorLexico al;
+
+    Analisar(AnalisadorLexico al) {
+        this.al = al;
+    }
+:}
+
+/* Define como se conectar com o analisador léxico */
+scan with {: return al.yylex(); :};
+
+/* Terminais (tokens retornados pelo analisador léxico). */
+terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
+                    END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
+                    EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,
+                    MINUSCHAR, NOT, FALSE, TRUE;
+
+/* Não terminais */
+non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 
+                    stmt_list, stmt,
+                    assign_stmt, if_stmt, cond, loop_stmt, stmt_prefix, stmt_suffix,
+                    read_stmt, write_stmt, expr_list, expr, simple_expr, term, 
+                    factor_a, factor, constant, boolean_constant;
+
+/* Precedência */
+precedence left ADDOP;
+precedence left MULOP;
+
+/* Ponto de partida */
+start with program;
+
+/* Regras gramaticais */
+program ::= program IDENTIFIER EOLCHAR dec_list compound_stmt;
+
+dec_list ::= dec_list EOLCHAR decl
+           | decl;
+
+decl ::= ident_list DECCHAR type;
+
+ident_list ::= ident_list ENUMCHAR IDENTIFIER
+             | IDENTIFIER;
+
+type ::= INTEGER, REAL, BOOLEAN, CHAR;
+
+compound_stmt ::= BEGIN stmt_list END;
+
+stmt_list ::= stmt_list ENUMCHAR stmt
+            | stmt;
+
+stmt ::= assign_stmt, if_stmt, loop_stmt, read_stmt, write_stmt, compound_stmt;
+
+assign_stmt ::= IDENTIFIER ASSIGNCHAR expr;
+
+if_stmt ::= IF cond THEN stmt
+          | IF cond THEN stmt ELSE stmt;
+
+cond ::= expr;
+
+loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix;
+
+stmt_prefix ::= WHILE cond
+              | ; /* vazio */
+
+stmt_suffix ::= UNTIL cond
+              | END;
+
+read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR;
+
+write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR;
+
+expr_list ::= expr
+            | expr_list ENUMCHAR expr;
+
+expr ::= simple_expr
+       | simple_expr RELOP simple_expr;
+
+simple_expr ::= term
+              | simple_expr ADDOP term;
+
+term ::= factor_a
+       | term MULOP factor_a;
+
+factor_a ::= MINUSCHAR factor
+           | factor;
+
+factor ::= IDENTIFIER
+         | constant
+         | OPENPARCHAR expr CLOSEPARCHAR
+         | NOT factor;
+
+constant ::= integer_constant:i
+           | real_constant:r
+           | char_constant:c
+           | boolean_constant:b;
