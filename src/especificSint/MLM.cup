@@ -1,29 +1,29 @@
 /* Analisador Sintático para linguagem MLM */
 
+package pacotePrincipal;
+
+class AnalisadorSintatico;
+
 //Conecta este analisador sintático ao analisador léxico
 parser code {:
-    AnalisadorLexico al;
-
-    Analisar(AnalisadorLexico al) {
-        this.al = al;
+    AnalisadorSintatico(AnalisadorLexico al, ComplexSymbolFactory sf) {
+        super(al, sf);
     }
 :}
-
-/* Define como se conectar com o analisador léxico */
-scan with {: return al.yylex(); :};
 
 /* Terminais (tokens retornados pelo analisador léxico). */
 terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
                     END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
                     EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,
-                    MINUSCHAR, NOT, FALSE, TRUE;
+                    MINUSCHAR, NOT;
 
 /* Não terminais */
 non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 
                     stmt_list, stmt,
                     assign_stmt, if_stmt, cond, loop_stmt, stmt_prefix, stmt_suffix,
                     read_stmt, write_stmt, expr_list, expr, simple_expr, term, 
-                    factor_a, factor, constant, boolean_constant;
+                    factor_a, factor, constant,
+                    if_stmt_a, if_stmt_b;
 
 /* Precedência */
 precedence left ADDOP;
@@ -33,7 +33,7 @@ precedence left MULOP;
 start with program;
 
 /* Regras gramaticais */
-program ::= program IDENTIFIER EOLCHAR dec_list compound_stmt;
+program ::= PROGRAM IDENTIFIER EOLCHAR dec_list compound_stmt;
 
 dec_list ::= dec_list EOLCHAR decl
            | decl;
@@ -43,19 +43,27 @@ decl ::= ident_list DECCHAR type;
 ident_list ::= ident_list ENUMCHAR IDENTIFIER
              | IDENTIFIER;
 
-type ::= INTEGER, REAL, BOOLEAN, CHAR;
+type ::= INTEGER | REAL | BOOLEAN | CHAR;
 
 compound_stmt ::= BEGIN stmt_list END;
 
 stmt_list ::= stmt_list ENUMCHAR stmt
             | stmt;
 
-stmt ::= assign_stmt, if_stmt, loop_stmt, read_stmt, write_stmt, compound_stmt;
+stmt ::= assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt;
 
 assign_stmt ::= IDENTIFIER ASSIGNCHAR expr;
 
+/* Conflito shift-reduce:
 if_stmt ::= IF cond THEN stmt
-          | IF cond THEN stmt ELSE stmt;
+          | IF cond THEN stmt ELSE stmt; */
+
+if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a;
+
+if_stmt_b ::= IF cond THEN stmt
+            | IF cond THEN if_stmt_a ELSE if_stmt_b;
+
+if_stmt ::= if_stmt_a | if_stmt_b;
 
 cond ::= expr;
 
@@ -91,7 +99,7 @@ factor ::= IDENTIFIER
          | OPENPARCHAR expr CLOSEPARCHAR
          | NOT factor;
 
-constant ::= integer_constant:i
-           | real_constant:r
-           | char_constant:c
-           | boolean_constant:b;
+constant ::= INTEGER:i
+           | REAL:r
+           | CHAR:c
+           | BOOLEAN:b;
