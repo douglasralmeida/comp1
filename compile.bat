@@ -1,3 +1,7 @@
+jflex -d src/pacotePrincipal src/especificacoes/Yylex.lex
+
+cups -parser AnalisadorSintatico -symbols sym -interface -destdir src/pacotePrincipal src/especificacoes/MLM.cup
+
 SETLOCAL
 
 SET "ECLIPSE_PATH=D:\eclipse"

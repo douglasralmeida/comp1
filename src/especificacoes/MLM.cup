@@ -2,6 +2,8 @@
 
 package pacotePrincipal;
 
+import java_cup.runtime.ComplexSymbolFactory;
+
 class AnalisadorSintatico;
 
 //Conecta este analisador sintático ao analisador léxico
@@ -15,7 +17,8 @@ parser code {:
 terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
                     END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
                     EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,
-                    MINUSCHAR, NOT;
+                    MINUSCHAR, NOT, EQUAL, LESS, GREATER, PLUS, TIMES, DIVIDED, LESSEQUAL,
+                    GRATEREQUAL, DIFFERENT, OR, AND, MOD;
 
 /* Não terminais */
 non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 

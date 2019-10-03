@@ -10,7 +10,6 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 /* procedimentos */
 %{
-
     ComplexSymbolFactory symbolFactory;
 
     StringBuffer string = new StringBuffer();
@@ -30,12 +29,6 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
-    private Symbol symbol(String name, int sym, Object val, int buflength) {
-        Location left = new Location(yyline+1,yycolumn+yylength()-buflength,yychar+yylength()-buflength);
-        Location right = new Location(yyline+1,yycolumn+yylength(),yychar+yylength());
-
-        return symbolFactory.newSymbol(name, sym, left, right, val);
-    }
   
     private void exibirErro(String msg) {
         System.out.println("Existe um erro na linha "+(yyline+1)+", column "+(yycolumn+1)+" : " + msg);
@@ -45,7 +38,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %cup
 %public
 %class AnalisadorLexico
-%implements sym
+%implements AnalisadorSintaticoSym
 %char
 %line
 %column
@@ -74,25 +67,25 @@ boolean_constant=false|true
 
 <YYINITIAL> {
     /* operadores de relação */
-    "="      { return symbol("equal", RELOP, new Integer(EQUAL)); }
-    "<"      { return symbol("less", RELOP, new Integer(LESS)); }
-    "<="     { return symbol("lessequal", RELOP, new Integer(LESSEQUAL)); }
-    ">"      { return symbol("greater", RELOP, new Integer(GRATER)); }
-    ">="     { return symbol("greaterequal", RELOP, new Integer(GRATEREQUAL)); }
-    "!="     { return symbol("different", RELOP, new Integer(DIFFERENT)); }
-    "not"    { return symbol("not", RELOP, new Integer(NOT)); }
+    "="      { return symbol("equal", RELOP, Integer.valueOf(EQUAL)); }
+    "<"      { return symbol("less", RELOP, Integer.valueOf(LESS)); }
+    "<="     { return symbol("lessequal", RELOP, Integer.valueOf(LESSEQUAL)); }
+    ">"      { return symbol("greater", RELOP, Integer.valueOf(GREATER)); }
+    ">="     { return symbol("greaterequal", RELOP, Integer.valueOf(GRATEREQUAL)); }
+    "!="     { return symbol("different", RELOP, Integer.valueOf(DIFFERENT)); }
+    "not"    { return symbol("not", RELOP, Integer.valueOf(NOT)); }
 
     /* operadores de adição */
-    "+"    { return symbol("plus", ADDOP, new Integer(PLUS)); }
-    "-"    { return symbol("minus", ADDOP, new Integer(ADDOP)); }
-    "or"   { return symbol("or", ADDOP, new Integer(OR)); }
+    "+"    { return symbol("plus", ADDOP, Integer.valueOf(PLUS)); }
+    "-"    { return symbol("minus", ADDOP, Integer.valueOf(ADDOP)); }
+    "or"   { return symbol("or", ADDOP, Integer.valueOf(OR)); }
 
     /* operadores de multiplicação */
-    "*"      { return symbol("times", MULOP, new Integer(TIMES)); }
-    "/"      { return symbol("divided", MULOP, new Integer(DIVIDED)); }
-    "div"    { return symbol("divided", MULOP, new Integer(DIVIDED)); }
-    "mod"    { return symbol("mod", MULOP, new Integer(MOD)); }
-    "and"    { return symbol("and", MULOP, new Integer(AND)); }
+    "*"      { return symbol("times", MULOP, Integer.valueOf(TIMES)); }
+    "/"      { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
+    "div"    { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
+    "mod"    { return symbol("mod", MULOP, Integer.valueOf(MOD)); }
+    "and"    { return symbol("and", MULOP, Integer.valueOf(AND)); }
 
     /* palavras reservadas */
     "program" { return symbol("program", PROGRAM); }
@@ -121,10 +114,10 @@ boolean_constant=false|true
 }
 
 /* constantes */
-{boolean_constant}  { return symbol("bool_const", BOOLEAN, new Boolean(Boolean.parseBool(yytext()))); }
-{integer_constant}  { return symbol("int_const", INTEGER, new Integer(Integer.parseInt(yytext()))); }
-{real_constant}     { return symbol("real_const", REAL, new Float(Float.parseFloat(yytext()))); }
-{char_constant}     { return symbol("char_const", CHAR, new Character(yytext().charAt(1))); }
+{boolean_constant}  { return symbol("bool_const", BOOLEAN, Boolean.valueOf(Boolean.parseBoolean(yytext()))); }
+{integer_constant}  { return symbol("int_const", INTEGER, Integer.valueOf(Integer.parseInt(yytext()))); }
+{real_constant}     { return symbol("real_const", REAL, Float.valueOf(Float.parseFloat(yytext()))); }
+{char_constant}     { return symbol("char_const", CHAR, Character.valueOf(yytext().charAt(1))); }
 
 /* outros */
 {identifier} { return symbol("identifier", IDENTIFIER, yytext()); }

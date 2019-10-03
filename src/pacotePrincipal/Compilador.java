@@ -5,11 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ScannerBuffer;
+
 public class Compilador {
 
 	public static void main(String[] args) throws IOException {
 		StringReader sr = null;
-		
+
 		if (args.length < 1) {
 			System.out.println("A sintaxe do comando está incorreta.");
 			System.out.println("Use: java -p bin\\ -m compilador/pacotePrincipal.Compilador <arquivoentrada>");
@@ -27,14 +30,19 @@ public class Compilador {
 		    br.close();
 		    sr = new StringReader(sb.toString());
 		} catch (IOException ex) {
-			System.out.println("Ocorreu um erro ao carregar o arquivo.");
+			System.out.println(String.format("Ocorreu um erro ao carregar o arquivo %s: %s.", args[0], ex.getMessage()));
 			System.exit(1);
 		}		
 		try {    
-			AnalisadorLexico lex = new AnalisadorLexico(sr);
-	        lex.yylex();
-		} catch (IOException ex) {
-			System.out.println("Ocorreu um erro ao processar o arquivo.");
+			AnalisadorLexico al = new AnalisadorLexico(sr);
+			ComplexSymbolFactory csf = new ComplexSymbolFactory();
+			ScannerBuffer scanner = new ScannerBuffer(al);
+			AnalisadorSintatico sint = new AnalisadorSintatico(scanner, csf);
+			System.out.println("Analisando arquivo " + args[0] + "...");
+			sint.parse();
+	        
+		} catch (Exception ex) {
+			System.out.println(String.format("Ocorreu um erro ao processar o arquivo: %s.", ex.getMessage()));
 			System.exit(1);
 		}
 		
