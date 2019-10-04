@@ -45,7 +45,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 /* definicoes regulares */
 delimin=\r|\n|\r\n|[ \t\f]
-stoken=[delimin]+
+stoken={delimin}+
 letter=[a-zA-Z]
 digit=[0-9]
 identifier={letter}({letter}|{digit})*

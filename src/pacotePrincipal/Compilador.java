@@ -40,14 +40,15 @@ public class Compilador {
 			AnalisadorSintatico sint = new AnalisadorSintatico(scanner, csf);
 			System.out.println("Analisando arquivo " + args[0] + "...");
 			sint.parse();
-			System.out.println("Aceito.");
+			System.out.println("\nAceito.");
 	        
 		} catch (Exception ex) {
 			System.out.println(String.format("Ocorreu um erro ao processar o arquivo: %s.", ex.getMessage()));
 			ex.printStackTrace();
+			System.out.println("\nRejeitado.");
 			System.exit(1);
 		}
-		
+
 		System.exit(0);
 	}
 }

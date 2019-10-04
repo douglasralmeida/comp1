@@ -1,8 +1,17 @@
 program teste;
 
 b: boolean;
-c: boolean
+c: char;
+d: integer
 
 begin
-  b := true
+  b := true;
+  c := 'X';
+  if b = false then
+     c := 'Y';
+  write(c);
+  while B = true do
+    c := 'Z';
+    d := d + 2
+  end
 end

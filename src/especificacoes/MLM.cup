@@ -2,6 +2,7 @@
 
 package pacotePrincipal;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.LinkedList;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
@@ -12,16 +13,35 @@ class AnalisadorSintatico;
 /* Código Java personalizado para o analisador sintático */
 parser code {:
     protected void report_expected_token_ids(){
-  	  List<Integer> ids = expected_token_ids();
-  	  LinkedList<String> list = new LinkedList<String>();
-  	  for (Integer expected : ids){
-  		  list.add(symbl_name_from_id(expected));
-  	  }
-  	  System.out.println("Eram esperadas uma das expressões: " + list + ".");
+        List<Integer> ids = expected_token_ids();
+        LinkedList<String> list = new LinkedList<String>();
+
+        for (Integer expected: ids) {
+            list.add(symbl_name_from_id(expected));
+        }
+        System.out.println("Eram esperadas uma das expressões: " + list + ".");
     }
+
+    public String symbl_name_from_id(int id){
+	  Field[] fields = getSymbolContainer().getFields();
+
+	  for (Field f : fields) {
+		  try {
+			if (f.getInt(null)==id)
+			  return f.getName();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	  }
+
+	  return "invalid symbol id";
+  }
 
     public void syntax_error(Symbol s) {
         ComplexSymbol cs = (ComplexSymbol)s;
+        
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressão \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
@@ -60,7 +80,10 @@ decl ::= ident_list DECCHAR type {: System.out.println("decl -> ident_list: type
 ident_list ::= ident_list ENUMCHAR IDENTIFIER  {: System.out.println("ident_list -> ident_list, identifier"); :}
              | IDENTIFIER  {: System.out.println("ident_list -> identifier"); :};
 
-type ::= INTEGER | REAL | BOOLEAN | CHAR {: System.out.println("type -> integer | real | boolean | char"); :};
+type ::= INTEGER {: System.out.println("type -> integer"); :}
+       | REAL {: System.out.println("type -> real"); :}
+       | BOOLEAN {: System.out.println("type -> boolean"); :}
+       | CHAR {: System.out.println("type -> char"); :};
 
 compound_stmt ::= BEGIN stmt_list END {: System.out.println("compound_stmt -> begin stmt_list end"); :};
 
@@ -69,7 +92,7 @@ stmt_list ::= stmt_list EOLCHAR stmt {: System.out.println("stmt_list -> stmt_li
 
 stmt ::= assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt {: System.out.println("stmt -> assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt"); :};
 
-assign_stmt ::= IDENTIFIER ASSIGNCHAR expr;
+assign_stmt ::= IDENTIFIER ASSIGNCHAR expr {: System.out.println("assign_stmt -> IDENTIFIER := expr"); :};
 
 /* Conflito shift-reduce:
 if_stmt ::= IF cond THEN stmt
@@ -77,46 +100,46 @@ if_stmt ::= IF cond THEN stmt
 
 if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a;
 
-if_stmt_b ::= IF cond THEN stmt
-            | IF cond THEN if_stmt_a ELSE if_stmt_b;
+if_stmt_b ::= IF cond THEN stmt {: System.out.println("if_stmt -> IF cond THEN stmt"); :}
+            | IF cond THEN if_stmt_a ELSE if_stmt_b {: System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); :};
 
 if_stmt ::= if_stmt_a | if_stmt_b;
 
-cond ::= expr;
+cond ::= expr {: System.out.println("cond -> expr"); :};
 
-loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix;
+loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix {: System.out.println("loop_stmt -> stmt_prefix DO stmt_list stmt_suffix"); :};
 
-stmt_prefix ::= WHILE cond
-              | /* vazio */;
+stmt_prefix ::= WHILE cond {: System.out.println("stmt_prefix -> WHILE cond"); :}
+              | /* vazio */ {: System.out.println("stmt_prefix -> e"); :};
 
-stmt_suffix ::= UNTIL cond
-              | END;
+stmt_suffix ::= UNTIL cond {: System.out.println("stmt_suffix -> UNTIL cond"); :}
+              | END {: System.out.println("stmt_suffix -> e"); :};
 
-read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR;
+read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR {: System.out.println("read_stmt -> READ(ident_list)"); :};
 
-write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR;
+write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR {: System.out.println("write_stmt -> WRITE(expr_list)"); :};
 
-expr_list ::= expr
-            | expr_list ENUMCHAR expr;
+expr_list ::= expr {: System.out.println("expr_list -> expr"); :}
+            | expr_list ENUMCHAR expr {: System.out.println("expr_list -> expr_list; expr"); :};
 
-expr ::= simple_expr
-       | simple_expr RELOP simple_expr;
+expr ::= simple_expr {: System.out.println("expr -> simple_expr"); :}
+       | simple_expr RELOP:r simple_expr {: System.out.println("simple_expr RELOP simple_expr"); :};
 
-simple_expr ::= term
-              | simple_expr ADDOP term;
+simple_expr ::= term {: System.out.println("simple_expr -> term"); :}
+              | simple_expr ADDOP:a term {: System.out.println("simple_expr ADDOP term"); :};
 
-term ::= factor_a
-       | term MULOP factor_a;
+term ::= factor_a {: System.out.println("term -> factor_a"); :}
+       | term MULOP factor_a {: System.out.println("term MULOP factor_a"); :};
 
-factor_a ::= MINUSCHAR factor
-           | factor;
+factor_a ::= MINUSCHAR factor {: System.out.println("factor_a -> -factor"); :}
+           | factor {: System.out.println("factor_a -> factor"); :};
 
-factor ::= IDENTIFIER
-         | constant
-         | OPENPARCHAR expr CLOSEPARCHAR
-         | NOT factor;
+factor ::= IDENTIFIER {: System.out.println("factor -> IDENTIFIER"); :}
+         | constant {: System.out.println("factor -> constant"); :}
+         | OPENPARCHAR expr CLOSEPARCHAR {: System.out.println("factor -> (expr)"); :}
+         | NOT factor {: System.out.println("factors -> NOT factor"); :};
 
-constant ::= INTEGER:i
-           | REAL:r
-           | CHAR:c
-           | BOOLEAN:b;
+constant ::= INTEGER:i {: System.out.println("constant -> " + i); :}
+           | REAL:r {: System.out.println("constant -> " + r); :}
+           | CHAR:c {: System.out.println("constant -> '" + c + "'"); :}
+           | BOOLEAN:b {: System.out.println("constant -> " + b); :};

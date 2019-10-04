@@ -1,0 +1,142 @@
+Analisando arquivo test/correto.pas...
+ident_list -> identifier
+type -> boolean
+decl -> ident_list: type
+dec_list -> decl
+ident_list -> identifier
+type -> char
+decl -> ident_list: type
+dec_list -> dec_list; decl
+ident_list -> identifier
+type -> integer
+decl -> ident_list: type
+dec_list -> dec_list; decl
+constant -> true
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt
+constant -> 'X'
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt_list; stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+constant -> false
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+simple_expr RELOP simple_expr
+cond -> expr
+constant -> 'Y'
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+if_stmt -> IF cond THEN stmt
+stmt_list -> stmt_list; stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+expr_list -> expr
+write_stmt -> WRITE(expr_list)
+stmt_list -> stmt_list; stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+constant -> true
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+simple_expr RELOP simple_expr
+cond -> expr
+stmt_prefix -> WHILE cond
+constant -> 'Z'
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+constant -> 2
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr ADDOP term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt_list; stmt
+stmt_suffix -> e
+loop_stmt -> stmt_prefix DO stmt_list stmt_suffix
+stmt_list -> stmt_list; stmt
+compound_stmt -> begin stmt_list end
+program -> PROGRAM identifier; dec_list compound_stmt
+
+Aceito.
+
+
+
+
+Analisando arquivo test/incorreto.pas...
+ident_list -> identifier
+type -> boolean
+decl -> ident_list: type
+dec_list -> decl
+ident_list -> identifier
+type -> char
+decl -> ident_list: type
+dec_list -> dec_list; decl
+constant -> true
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt
+constant -> 'X'
+factor -> constant
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+assign_stmt -> IDENTIFIER := expr
+stmt_list -> stmt_list; stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+expr -> simple_expr
+expr_list -> expr
+write_stmt -> WRITE(expr_list)
+stmt_list -> stmt_list; stmt
+factor -> IDENTIFIER
+factor_a -> factor
+term -> factor_a
+simple_expr -> term
+Um erro de sintaxe foi encontrado com a expressão "integer" na linha 10, coluna 17.
+Eram esperadas uma das expressões: [THEN].
+Ocorreu um erro ao processar o arquivo: Can't recover from previous error(s).
+
+Rejeitado.

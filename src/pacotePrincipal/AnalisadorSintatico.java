@@ -5,11 +5,11 @@
 
 package pacotePrincipal;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.LinkedList;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import java_cup.runtime.Symbol;
-import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
@@ -34,22 +34,23 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\063\000\002\002\004\000\002\002\007\000\002\003" +
+    "\000\064\000\002\002\004\000\002\002\007\000\002\003" +
     "\005\000\002\003\003\000\002\004\005\000\002\005\005" +
     "\000\002\005\003\000\002\006\003\000\002\006\003\000" +
     "\002\006\003\000\002\006\003\000\002\007\005\000\002" +
     "\010\005\000\002\010\003\000\002\011\003\000\002\011" +
     "\003\000\002\011\003\000\002\011\003\000\002\011\003" +
-    "\000\002\012\005\000\002\031\010\000\002\032\006\000" +
-    "\002\032\010\000\002\013\003\000\002\013\003\000\002" +
-    "\014\003\000\002\015\006\000\002\016\004\000\002\016" +
-    "\002\000\002\017\004\000\002\017\003\000\002\020\006" +
-    "\000\002\021\006\000\002\022\003\000\002\022\005\000" +
-    "\002\023\003\000\002\023\005\000\002\024\003\000\002" +
-    "\024\005\000\002\025\003\000\002\025\005\000\002\026" +
-    "\004\000\002\026\003\000\002\027\003\000\002\027\003" +
-    "\000\002\027\005\000\002\027\004\000\002\030\003\000" +
-    "\002\030\003\000\002\030\003\000\002\030\003" });
+    "\000\002\011\003\000\002\012\005\000\002\031\010\000" +
+    "\002\032\006\000\002\032\010\000\002\013\003\000\002" +
+    "\013\003\000\002\014\003\000\002\015\006\000\002\016" +
+    "\004\000\002\016\002\000\002\017\004\000\002\017\003" +
+    "\000\002\020\006\000\002\021\006\000\002\022\003\000" +
+    "\002\022\005\000\002\023\003\000\002\023\005\000\002" +
+    "\024\003\000\002\024\005\000\002\025\003\000\002\025" +
+    "\005\000\002\026\004\000\002\026\003\000\002\027\003" +
+    "\000\002\027\003\000\002\027\005\000\002\027\004\000" +
+    "\002\030\003\000\002\030\003\000\002\030\003\000\002" +
+    "\030\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -57,7 +58,7 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\117\000\004\007\005\001\002\000\004\002\121\001" +
+    "\000\132\000\004\007\005\001\002\000\004\002\134\001" +
     "\002\000\004\026\006\001\002\000\004\027\007\001\002" +
     "\000\004\026\012\001\002\000\006\014\ufffe\027\ufffe\001" +
     "\002\000\006\014\025\027\026\001\002\000\010\030\ufffb" +
@@ -67,75 +68,87 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
     "\ufffc\001\002\000\006\014\ufffa\027\ufffa\001\002\000\006" +
     "\014\ufff9\027\ufff9\001\002\000\006\014\ufffd\027\ufffd\001" +
     "\002\000\006\014\ufff8\027\ufff8\001\002\000\006\014\ufff7" +
-    "\027\ufff7\001\002\000\004\002\000\001\002\000\016\014" +
-    "\025\021\uffe5\022\032\024\031\025\040\026\041\001\002" +
-    "\000\004\026\012\001\002\000\006\014\uffff\027\uffff\001" +
-    "\002\000\010\015\uffef\023\uffef\027\uffef\001\002\000\004" +
-    "\033\116\001\002\000\022\010\053\011\065\012\061\013" +
-    "\071\026\066\033\054\035\057\036\067\001\002\000\010" +
-    "\015\ufff0\023\ufff0\027\ufff0\001\002\000\010\015\ufff4\023" +
-    "\ufff4\027\ufff4\001\002\000\010\015\ufff3\023\ufff3\027\ufff3" +
-    "\001\002\000\010\015\ufff2\023\ufff2\027\ufff2\001\002\000" +
-    "\010\015\ufff1\023\ufff1\027\ufff1\001\002\000\004\033\107" +
-    "\001\002\000\004\032\105\001\002\000\006\015\104\027" +
-    "\051\001\002\000\004\021\044\001\002\000\016\014\025" +
-    "\021\uffe5\022\032\024\031\025\040\026\041\001\002\000" +
-    "\010\015\050\023\046\027\051\001\002\000\022\010\053" +
-    "\011\065\012\061\013\071\026\066\033\054\035\057\036" +
-    "\067\001\002\000\010\015\uffe7\023\uffe7\027\uffe7\001\002" +
-    "\000\010\015\uffe3\023\uffe3\027\uffe3\001\002\000\016\014" +
-    "\025\021\uffe5\022\032\024\031\025\040\026\041\001\002" +
-    "\000\010\015\ufff5\023\ufff5\027\ufff5\001\002\000\024\004" +
-    "\uffd2\005\uffd2\006\uffd2\015\uffd2\021\uffd2\023\uffd2\027\uffd2" +
-    "\031\uffd2\034\uffd2\001\002\000\022\010\053\011\065\012" +
-    "\061\013\071\026\066\033\054\035\057\036\067\001\002" +
-    "\000\024\004\uffda\005\uffda\006\uffda\015\uffda\021\uffda\023" +
-    "\uffda\027\uffda\031\uffda\034\uffda\001\002\000\022\004\076" +
-    "\005\077\015\uffde\021\uffde\023\uffde\027\uffde\031\uffde\034" +
-    "\uffde\001\002\000\020\010\053\011\065\012\061\013\071" +
-    "\026\066\033\054\036\067\001\002\000\024\004\uffdc\005" +
-    "\uffdc\006\073\015\uffdc\021\uffdc\023\uffdc\027\uffdc\031\uffdc" +
-    "\034\uffdc\001\002\000\024\004\uffcf\005\uffcf\006\uffcf\015" +
-    "\uffcf\021\uffcf\023\uffcf\027\uffcf\031\uffcf\034\uffcf\001\002" +
-    "\000\024\004\uffd5\005\uffd5\006\uffd5\015\uffd5\021\uffd5\023" +
-    "\uffd5\027\uffd5\031\uffd5\034\uffd5\001\002\000\024\004\uffd7" +
-    "\005\uffd7\006\uffd7\015\uffd7\021\uffd7\023\uffd7\027\uffd7\031" +
-    "\uffd7\034\uffd7\001\002\000\010\015\uffe4\023\uffe4\027\uffe4" +
-    "\001\002\000\024\004\uffd1\005\uffd1\006\uffd1\015\uffd1\021" +
-    "\uffd1\023\uffd1\027\uffd1\031\uffd1\034\uffd1\001\002\000\024" +
-    "\004\uffd6\005\uffd6\006\uffd6\015\uffd6\021\uffd6\023\uffd6\027" +
-    "\uffd6\031\uffd6\034\uffd6\001\002\000\020\010\053\011\065" +
-    "\012\061\013\071\026\066\033\054\036\067\001\002\000" +
-    "\012\015\uffe8\021\uffe8\023\uffe8\027\uffe8\001\002\000\024" +
-    "\004\uffd0\005\uffd0\006\uffd0\015\uffd0\021\uffd0\023\uffd0\027" +
-    "\uffd0\031\uffd0\034\uffd0\001\002\000\024\004\uffd3\005\uffd3" +
-    "\006\uffd3\015\uffd3\021\uffd3\023\uffd3\027\uffd3\031\uffd3\034" +
-    "\uffd3\001\002\000\022\010\053\011\065\012\061\013\071" +
-    "\026\066\033\054\035\057\036\067\001\002\000\024\004" +
-    "\uffd9\005\uffd9\006\uffd9\015\uffd9\021\uffd9\023\uffd9\027\uffd9" +
-    "\031\uffd9\034\uffd9\001\002\000\024\004\uffd8\005\uffd8\006" +
-    "\uffd8\015\uffd8\021\uffd8\023\uffd8\027\uffd8\031\uffd8\034\uffd8" +
-    "\001\002\000\022\010\053\011\065\012\061\013\071\026" +
-    "\066\033\054\035\057\036\067\001\002\000\022\010\053" +
-    "\011\065\012\061\013\071\026\066\033\054\035\057\036" +
-    "\067\001\002\000\020\004\076\015\uffdd\021\uffdd\023\uffdd" +
-    "\027\uffdd\031\uffdd\034\uffdd\001\002\000\024\004\uffdb\005" +
-    "\uffdb\006\073\015\uffdb\021\uffdb\023\uffdb\027\uffdb\031\uffdb" +
-    "\034\uffdb\001\002\000\004\034\103\001\002\000\024\004" +
-    "\uffd4\005\uffd4\006\uffd4\015\uffd4\021\uffd4\023\uffd4\027\uffd4" +
-    "\031\uffd4\034\uffd4\001\002\000\012\002\ufff6\015\ufff6\023" +
-    "\ufff6\027\ufff6\001\002\000\022\010\053\011\065\012\061" +
-    "\013\071\026\066\033\054\035\057\036\067\001\002\000" +
-    "\010\015\uffee\023\uffee\027\uffee\001\002\000\022\010\053" +
-    "\011\065\012\061\013\071\026\066\033\054\035\057\036" +
-    "\067\001\002\000\006\031\113\034\112\001\002\000\006" +
-    "\031\uffe0\034\uffe0\001\002\000\010\015\uffe1\023\uffe1\027" +
-    "\uffe1\001\002\000\022\010\053\011\065\012\061\013\071" +
-    "\026\066\033\054\035\057\036\067\001\002\000\006\031" +
-    "\uffdf\034\uffdf\001\002\000\004\021\uffe6\001\002\000\004" +
-    "\026\012\001\002\000\006\031\015\034\120\001\002\000" +
-    "\010\015\uffe2\023\uffe2\027\uffe2\001\002\000\004\002\001" +
-    "\001\002" });
+    "\027\ufff7\001\002\000\004\002\000\001\002\000\020\014" +
+    "\025\016\043\021\uffe4\022\032\024\030\025\044\026\045" +
+    "\001\002\000\004\026\012\001\002\000\006\014\uffff\027" +
+    "\uffff\001\002\000\004\033\131\001\002\000\010\015\uffee" +
+    "\023\uffee\027\uffee\001\002\000\022\010\060\011\067\012" +
+    "\065\013\075\026\072\033\057\035\062\036\073\001\002" +
+    "\000\010\015\ufff2\023\ufff2\027\ufff2\001\002\000\010\015" +
+    "\uffef\023\uffef\027\uffef\001\002\000\010\015\ufff4\023\ufff4" +
+    "\027\ufff4\001\002\000\010\015\ufff3\023\ufff3\027\ufff3\001" +
+    "\002\000\010\015\ufff1\023\ufff1\027\ufff1\001\002\000\010" +
+    "\015\uffe8\023\uffe8\027\uffe8\001\002\000\010\015\uffe9\023" +
+    "\uffe9\027\uffe9\001\002\000\010\015\ufff0\023\ufff0\027\ufff0" +
+    "\001\002\000\022\010\060\011\067\012\065\013\075\026" +
+    "\072\033\057\035\062\036\073\001\002\000\004\033\113" +
+    "\001\002\000\004\032\111\001\002\000\006\015\110\027" +
+    "\055\001\002\000\004\021\050\001\002\000\020\014\025" +
+    "\016\043\021\uffe4\022\032\024\030\025\044\026\045\001" +
+    "\002\000\010\015\053\023\054\027\055\001\002\000\010" +
+    "\015\uffe6\023\uffe6\027\uffe6\001\002\000\010\015\uffe2\023" +
+    "\uffe2\027\uffe2\001\002\000\022\010\060\011\067\012\065" +
+    "\013\075\026\072\033\057\035\062\036\073\001\002\000" +
+    "\020\014\025\016\043\021\uffe4\022\032\024\030\025\044" +
+    "\026\045\001\002\000\010\015\ufff5\023\ufff5\027\ufff5\001" +
+    "\002\000\022\010\060\011\067\012\065\013\075\026\072" +
+    "\033\057\035\062\036\073\001\002\000\026\004\uffd1\005" +
+    "\uffd1\006\uffd1\015\uffd1\017\uffd1\021\uffd1\023\uffd1\027\uffd1" +
+    "\031\uffd1\034\uffd1\001\002\000\026\004\uffd9\005\uffd9\006" +
+    "\uffd9\015\uffd9\017\uffd9\021\uffd9\023\uffd9\027\uffd9\031\uffd9" +
+    "\034\uffd9\001\002\000\020\010\060\011\067\012\065\013" +
+    "\075\026\072\033\057\036\073\001\002\000\024\004\101" +
+    "\005\102\015\uffdd\017\uffdd\021\uffdd\023\uffdd\027\uffdd\031" +
+    "\uffdd\034\uffdd\001\002\000\026\004\uffdb\005\uffdb\006\077" +
+    "\015\uffdb\017\uffdb\021\uffdb\023\uffdb\027\uffdb\031\uffdb\034" +
+    "\uffdb\001\002\000\026\004\uffce\005\uffce\006\uffce\015\uffce" +
+    "\017\uffce\021\uffce\023\uffce\027\uffce\031\uffce\034\uffce\001" +
+    "\002\000\026\004\uffd4\005\uffd4\006\uffd4\015\uffd4\017\uffd4" +
+    "\021\uffd4\023\uffd4\027\uffd4\031\uffd4\034\uffd4\001\002\000" +
+    "\026\004\uffd0\005\uffd0\006\uffd0\015\uffd0\017\uffd0\021\uffd0" +
+    "\023\uffd0\027\uffd0\031\uffd0\034\uffd0\001\002\000\010\015" +
+    "\uffe3\023\uffe3\027\uffe3\001\002\000\026\004\uffd6\005\uffd6" +
+    "\006\uffd6\015\uffd6\017\uffd6\021\uffd6\023\uffd6\027\uffd6\031" +
+    "\uffd6\034\uffd6\001\002\000\026\004\uffd5\005\uffd5\006\uffd5" +
+    "\015\uffd5\017\uffd5\021\uffd5\023\uffd5\027\uffd5\031\uffd5\034" +
+    "\uffd5\001\002\000\020\010\060\011\067\012\065\013\075" +
+    "\026\072\033\057\036\073\001\002\000\014\015\uffe7\017" +
+    "\uffe7\021\uffe7\023\uffe7\027\uffe7\001\002\000\026\004\uffcf" +
+    "\005\uffcf\006\uffcf\015\uffcf\017\uffcf\021\uffcf\023\uffcf\027" +
+    "\uffcf\031\uffcf\034\uffcf\001\002\000\026\004\uffd2\005\uffd2" +
+    "\006\uffd2\015\uffd2\017\uffd2\021\uffd2\023\uffd2\027\uffd2\031" +
+    "\uffd2\034\uffd2\001\002\000\022\010\060\011\067\012\065" +
+    "\013\075\026\072\033\057\035\062\036\073\001\002\000" +
+    "\026\004\uffd8\005\uffd8\006\uffd8\015\uffd8\017\uffd8\021\uffd8" +
+    "\023\uffd8\027\uffd8\031\uffd8\034\uffd8\001\002\000\022\010" +
+    "\060\011\067\012\065\013\075\026\072\033\057\035\062" +
+    "\036\073\001\002\000\022\010\060\011\067\012\065\013" +
+    "\075\026\072\033\057\035\062\036\073\001\002\000\022" +
+    "\004\101\015\uffdc\017\uffdc\021\uffdc\023\uffdc\027\uffdc\031" +
+    "\uffdc\034\uffdc\001\002\000\026\004\uffda\005\uffda\006\077" +
+    "\015\uffda\017\uffda\021\uffda\023\uffda\027\uffda\031\uffda\034" +
+    "\uffda\001\002\000\026\004\uffd7\005\uffd7\006\uffd7\015\uffd7" +
+    "\017\uffd7\021\uffd7\023\uffd7\027\uffd7\031\uffd7\034\uffd7\001" +
+    "\002\000\004\034\107\001\002\000\026\004\uffd3\005\uffd3" +
+    "\006\uffd3\015\uffd3\017\uffd3\021\uffd3\023\uffd3\027\uffd3\031" +
+    "\uffd3\034\uffd3\001\002\000\012\002\ufff6\015\ufff6\023\ufff6" +
+    "\027\ufff6\001\002\000\022\010\060\011\067\012\065\013" +
+    "\075\026\072\033\057\035\062\036\073\001\002\000\010" +
+    "\015\uffed\023\uffed\027\uffed\001\002\000\022\010\060\011" +
+    "\067\012\065\013\075\026\072\033\057\035\062\036\073" +
+    "\001\002\000\006\031\117\034\116\001\002\000\006\031" +
+    "\uffdf\034\uffdf\001\002\000\010\015\uffe0\023\uffe0\027\uffe0" +
+    "\001\002\000\022\010\060\011\067\012\065\013\075\026" +
+    "\072\033\057\035\062\036\073\001\002\000\006\031\uffde" +
+    "\034\uffde\001\002\000\004\017\122\001\002\000\020\014" +
+    "\025\016\043\021\uffe4\022\032\024\030\025\044\026\045" +
+    "\001\002\000\010\015\uffeb\023\uffeb\027\uffeb\001\002\000" +
+    "\012\015\uffe9\020\125\023\uffe9\027\uffe9\001\002\000\004" +
+    "\016\043\001\002\000\010\015\uffea\023\uffea\027\uffea\001" +
+    "\002\000\012\015\uffec\020\uffec\023\uffec\027\uffec\001\002" +
+    "\000\004\021\uffe5\001\002\000\004\026\012\001\002\000" +
+    "\006\031\015\034\133\001\002\000\010\015\uffe1\023\uffe1" +
+    "\027\uffe1\001\002\000\004\002\001\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -143,45 +156,52 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\117\000\004\002\003\001\001\000\002\001\001\000" +
+    "\000\132\000\004\002\003\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\010\003\010\004\007" +
     "\005\012\001\001\000\002\001\001\000\004\007\023\001" +
     "\001\000\002\001\001\000\002\001\001\000\004\006\020" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\022\007\027\010" +
-    "\041\011\033\012\034\015\035\016\042\020\036\021\032" +
-    "\001\001\000\006\004\026\005\012\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\020\014\114" +
-    "\023\067\024\055\025\057\026\054\027\062\030\061\001" +
+    "\000\002\001\001\000\002\001\001\000\030\007\030\010" +
+    "\045\011\034\012\035\013\032\015\036\016\046\020\041" +
+    "\021\033\031\040\032\037\001\001\000\006\004\026\005" +
+    "\012\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\020\014\127\023\073\024\062\025\063\026" +
+    "\060\027\070\030\065\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\020\014\120\023\073\024\062\025\063\026\060\027" +
+    "\070\030\065\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\030\007\030\010" +
+    "\050\011\034\012\035\013\032\015\036\016\046\020\041" +
+    "\021\033\031\040\032\037\001\001\000\004\017\051\001" +
+    "\001\000\002\001\001\000\002\001\001\000\020\014\067" +
+    "\023\073\024\062\025\063\026\060\027\070\030\065\001" +
+    "\001\000\026\007\030\011\055\012\035\013\032\015\036" +
+    "\016\046\020\041\021\033\031\040\032\037\001\001\000" +
+    "\002\001\001\000\016\023\105\024\062\025\063\026\060" +
+    "\027\070\030\065\001\001\000\002\001\001\000\002\001" +
+    "\001\000\006\027\104\030\065\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\022" +
-    "\007\027\010\044\011\033\012\034\015\035\016\042\020" +
-    "\036\021\032\001\001\000\004\017\046\001\001\000\020" +
-    "\014\063\023\067\024\055\025\057\026\054\027\062\030" +
-    "\061\001\001\000\002\001\001\000\002\001\001\000\020" +
-    "\007\027\011\051\012\034\015\035\016\042\020\036\021" +
-    "\032\001\001\000\002\001\001\000\002\001\001\000\016" +
-    "\023\101\024\055\025\057\026\054\027\062\030\061\001" +
-    "\001\000\002\001\001\000\002\001\001\000\006\027\074" +
-    "\030\061\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\006\027\071\030\061\001" +
+    "\001\001\000\006\027\075\030\065\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\010\026\077" +
+    "\027\070\030\065\001\001\000\002\001\001\000\012\025" +
+    "\103\026\060\027\070\030\065\001\001\000\014\024\102" +
+    "\025\063\026\060\027\070\030\065\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\010\026\073\027\062\030\061\001\001\000\002\001" +
-    "\001\000\002\001\001\000\012\025\100\026\054\027\062" +
-    "\030\061\001\001\000\014\024\077\025\057\026\054\027" +
-    "\062\030\061\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\016\023\105\024\055\025\057\026\054\027\062\030\061" +
-    "\001\001\000\002\001\001\000\020\022\107\023\110\024" +
-    "\055\025\057\026\054\027\062\030\061\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\016\023" +
-    "\113\024\055\025\057\026\054\027\062\030\061\001\001" +
-    "\000\002\001\001\000\002\001\001\000\004\005\116\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "" });
+    "\000\002\001\001\000\002\001\001\000\016\023\111\024" +
+    "\062\025\063\026\060\027\070\030\065\001\001\000\002" +
+    "\001\001\000\020\022\113\023\114\024\062\025\063\026" +
+    "\060\027\070\030\065\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\016\023\117\024\062\025" +
+    "\063\026\060\027\070\030\065\001\001\000\002\001\001" +
+    "\000\002\001\001\000\026\007\030\011\122\012\035\013" +
+    "\032\015\036\016\046\020\041\021\033\031\123\032\037" +
+    "\001\001\000\002\001\001\000\002\001\001\000\006\031" +
+    "\126\032\125\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\004\005\131\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -221,16 +241,35 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
 
 
     protected void report_expected_token_ids(){
-  	  List<Integer> ids = expected_token_ids();
-  	  LinkedList<String> list = new LinkedList<String>();
-  	  for (Integer expected : ids){
-  		  list.add(symbl_name_from_id(expected));
-  	  }
-  	  System.out.println("Eram esperadas uma das expressões: " + list + ".");
+        List<Integer> ids = expected_token_ids();
+        LinkedList<String> list = new LinkedList<String>();
+
+        for (Integer expected: ids) {
+            list.add(symbl_name_from_id(expected));
+        }
+        System.out.println("Eram esperadas uma das expressões: " + list + ".");
     }
+
+    public String symbl_name_from_id(int id){
+	  Field[] fields = getSymbolContainer().getFields();
+
+	  for (Field f : fields) {
+		  try {
+			if (f.getInt(null)==id)
+			  return f.getName();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	  }
+
+	  return "invalid symbol id";
+  }
 
     public void syntax_error(Symbol s) {
         ComplexSymbol cs = (ComplexSymbol)s;
+        
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressão \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
@@ -332,7 +371,7 @@ class CUP$AnalisadorSintatico$actions {
           case 7: // type ::= INTEGER 
             {
               Object RESULT =null;
-
+		 System.out.println("type -> integer"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -341,7 +380,7 @@ class CUP$AnalisadorSintatico$actions {
           case 8: // type ::= REAL 
             {
               Object RESULT =null;
-
+		 System.out.println("type -> real"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -350,7 +389,7 @@ class CUP$AnalisadorSintatico$actions {
           case 9: // type ::= BOOLEAN 
             {
               Object RESULT =null;
-
+		 System.out.println("type -> boolean"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -359,7 +398,7 @@ class CUP$AnalisadorSintatico$actions {
           case 10: // type ::= CHAR 
             {
               Object RESULT =null;
-		 System.out.println("type -> integer | real | boolean | char"); 
+		 System.out.println("type -> char"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -401,7 +440,7 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // stmt ::= loop_stmt 
+          case 15: // stmt ::= if_stmt 
             {
               Object RESULT =null;
 
@@ -410,7 +449,7 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // stmt ::= read_stmt 
+          case 16: // stmt ::= loop_stmt 
             {
               Object RESULT =null;
 
@@ -419,7 +458,7 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // stmt ::= write_stmt 
+          case 17: // stmt ::= read_stmt 
             {
               Object RESULT =null;
 
@@ -428,7 +467,16 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // stmt ::= compound_stmt 
+          case 18: // stmt ::= write_stmt 
+            {
+              Object RESULT =null;
+
+              CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
+            }
+          return CUP$AnalisadorSintatico$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 19: // stmt ::= compound_stmt 
             {
               Object RESULT =null;
 		 System.out.println("stmt -> assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt"); 
@@ -437,16 +485,16 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // assign_stmt ::= IDENTIFIER ASSIGNCHAR expr 
+          case 20: // assign_stmt ::= IDENTIFIER ASSIGNCHAR expr 
             {
               Object RESULT =null;
-
+		 System.out.println("assign_stmt -> IDENTIFIER := expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("assign_stmt",8, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a 
+          case 21: // if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a 
             {
               Object RESULT =null;
 
@@ -455,25 +503,25 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // if_stmt_b ::= IF cond THEN stmt 
+          case 22: // if_stmt_b ::= IF cond THEN stmt 
             {
               Object RESULT =null;
-
+		 System.out.println("if_stmt -> IF cond THEN stmt"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_b",24, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // if_stmt_b ::= IF cond THEN if_stmt_a ELSE if_stmt_b 
+          case 23: // if_stmt_b ::= IF cond THEN if_stmt_a ELSE if_stmt_b 
             {
               Object RESULT =null;
-
+		 System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_b",24, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-5)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // if_stmt ::= if_stmt_a 
+          case 24: // if_stmt ::= if_stmt_a 
             {
               Object RESULT =null;
 
@@ -482,7 +530,7 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // if_stmt ::= if_stmt_b 
+          case 25: // if_stmt ::= if_stmt_b 
             {
               Object RESULT =null;
 
@@ -491,247 +539,253 @@ class CUP$AnalisadorSintatico$actions {
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // cond ::= expr 
+          case 26: // cond ::= expr 
             {
               Object RESULT =null;
-
+		 System.out.println("cond -> expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("cond",10, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix 
+          case 27: // loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix 
             {
               Object RESULT =null;
-
+		 System.out.println("loop_stmt -> stmt_prefix DO stmt_list stmt_suffix"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("loop_stmt",11, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // stmt_prefix ::= WHILE cond 
+          case 28: // stmt_prefix ::= WHILE cond 
             {
               Object RESULT =null;
-
+		 System.out.println("stmt_prefix -> WHILE cond"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_prefix",12, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // stmt_prefix ::= 
+          case 29: // stmt_prefix ::= 
             {
               Object RESULT =null;
-
+		 System.out.println("stmt_prefix -> e"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_prefix",12, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 29: // stmt_suffix ::= UNTIL cond 
+          case 30: // stmt_suffix ::= UNTIL cond 
             {
               Object RESULT =null;
-
+		 System.out.println("stmt_suffix -> UNTIL cond"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_suffix",13, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // stmt_suffix ::= END 
+          case 31: // stmt_suffix ::= END 
             {
               Object RESULT =null;
-
+		 System.out.println("stmt_suffix -> e"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_suffix",13, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR 
+          case 32: // read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR 
             {
               Object RESULT =null;
-
+		 System.out.println("read_stmt -> READ(ident_list)"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("read_stmt",14, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 32: // write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR 
+          case 33: // write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR 
             {
               Object RESULT =null;
-
+		 System.out.println("write_stmt -> WRITE(expr_list)"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("write_stmt",15, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 33: // expr_list ::= expr 
+          case 34: // expr_list ::= expr 
             {
               Object RESULT =null;
-
+		 System.out.println("expr_list -> expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr_list",16, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 34: // expr_list ::= expr_list ENUMCHAR expr 
+          case 35: // expr_list ::= expr_list ENUMCHAR expr 
             {
               Object RESULT =null;
-
+		 System.out.println("expr_list -> expr_list; expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr_list",16, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 35: // expr ::= simple_expr 
+          case 36: // expr ::= simple_expr 
             {
               Object RESULT =null;
-
+		 System.out.println("expr -> simple_expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr",17, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 36: // expr ::= simple_expr RELOP simple_expr 
+          case 37: // expr ::= simple_expr RELOP simple_expr 
             {
               Object RESULT =null;
-
+		int rleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		 System.out.println("simple_expr RELOP simple_expr"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr",17, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 37: // simple_expr ::= term 
+          case 38: // simple_expr ::= term 
             {
               Object RESULT =null;
-
+		 System.out.println("simple_expr -> term"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("simple_expr",18, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 38: // simple_expr ::= simple_expr ADDOP term 
+          case 39: // simple_expr ::= simple_expr ADDOP term 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		 System.out.println("simple_expr ADDOP term"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("simple_expr",18, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 39: // term ::= factor_a 
+          case 40: // term ::= factor_a 
             {
               Object RESULT =null;
-
+		 System.out.println("term -> factor_a"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("term",19, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 40: // term ::= term MULOP factor_a 
+          case 41: // term ::= term MULOP factor_a 
             {
               Object RESULT =null;
-
+		 System.out.println("term MULOP factor_a"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("term",19, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 41: // factor_a ::= MINUSCHAR factor 
+          case 42: // factor_a ::= MINUSCHAR factor 
             {
               Object RESULT =null;
-
+		 System.out.println("factor_a -> -factor"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor_a",20, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 42: // factor_a ::= factor 
+          case 43: // factor_a ::= factor 
             {
               Object RESULT =null;
-
+		 System.out.println("factor_a -> factor"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor_a",20, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 43: // factor ::= IDENTIFIER 
+          case 44: // factor ::= IDENTIFIER 
             {
               Object RESULT =null;
-
+		 System.out.println("factor -> IDENTIFIER"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 44: // factor ::= constant 
+          case 45: // factor ::= constant 
             {
               Object RESULT =null;
-
+		 System.out.println("factor -> constant"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 45: // factor ::= OPENPARCHAR expr CLOSEPARCHAR 
+          case 46: // factor ::= OPENPARCHAR expr CLOSEPARCHAR 
             {
               Object RESULT =null;
-
+		 System.out.println("factor -> (expr)"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 46: // factor ::= NOT factor 
+          case 47: // factor ::= NOT factor 
             {
               Object RESULT =null;
-
+		 System.out.println("factors -> NOT factor"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 47: // constant ::= INTEGER 
+          case 48: // constant ::= INTEGER 
             {
               Object RESULT =null;
 		int ileft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int iright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object i = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-
+		 System.out.println("constant -> " + i); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 48: // constant ::= REAL 
+          case 49: // constant ::= REAL 
             {
               Object RESULT =null;
 		int rleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int rright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object r = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-
+		 System.out.println("constant -> " + r); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 49: // constant ::= CHAR 
+          case 50: // constant ::= CHAR 
             {
               Object RESULT =null;
 		int cleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-
+		 System.out.println("constant -> '" + c + "'"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 50: // constant ::= BOOLEAN 
+          case 51: // constant ::= BOOLEAN 
             {
               Object RESULT =null;
 		int bleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object b = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-
+		 System.out.println("constant -> " + b); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
