@@ -1,26 +1,40 @@
-/* Analisador Sint√°tico para linguagem MLM */
+/* Analisador Sint·tico para linguagem MLM */
 
 package pacotePrincipal;
 
-import java_cup.runtime.ComplexSymbolFactory;
+import java.util.List;
+import java.util.LinkedList;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java_cup.runtime.Symbol;
 
 class AnalisadorSintatico;
 
-//Conecta este analisador sint√°tico ao analisador l√©xico
+/* CÛdigo Java personalizado para o analisador sint·tico */
 parser code {:
-    AnalisadorSintatico(AnalisadorLexico al, ComplexSymbolFactory sf) {
-        super(al, sf);
+    protected void report_expected_token_ids(){
+  	  List<Integer> ids = expected_token_ids();
+  	  LinkedList<String> list = new LinkedList<String>();
+  	  for (Integer expected : ids){
+  		  list.add(symbl_name_from_id(expected));
+  	  }
+  	  System.out.println("Eram esperadas uma das expressıes: " + list + ".");
     }
+
+    public void syntax_error(Symbol s) {
+        ComplexSymbol cs = (ComplexSymbol)s;
+        System.out.println(String.format("Um erro de sintaxe foi encontrado com a express„o \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
+        report_expected_token_ids();
+    };
 :}
 
-/* Terminais (tokens retornados pelo analisador l√©xico). */
+/* Terminais (tokens retornados pelo analisador lÈxico). */
 terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
                     END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
                     EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,
                     MINUSCHAR, NOT, EQUAL, LESS, GREATER, PLUS, TIMES, DIVIDED, LESSEQUAL,
                     GRATEREQUAL, DIFFERENT, OR, AND, MOD;
 
-/* N√£o terminais */
+/* N„o terminais */
 non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 
                     stmt_list, stmt,
                     assign_stmt, if_stmt, cond, loop_stmt, stmt_prefix, stmt_suffix,
@@ -28,7 +42,7 @@ non terminal        program, dec_list, decl, ident_list, type, compound_stmt,
                     factor_a, factor, constant,
                     if_stmt_a, if_stmt_b;
 
-/* Preced√™ncia */
+/* PrecedÍncia */
 precedence left ADDOP;
 precedence left MULOP;
 
@@ -36,24 +50,24 @@ precedence left MULOP;
 start with program;
 
 /* Regras gramaticais */
-program ::= PROGRAM IDENTIFIER EOLCHAR dec_list compound_stmt;
+program ::= PROGRAM IDENTIFIER EOLCHAR dec_list compound_stmt {: System.out.println("program -> PROGRAM identifier; dec_list compound_stmt"); :};
 
-dec_list ::= dec_list EOLCHAR decl
-           | decl;
+dec_list ::= dec_list EOLCHAR decl {: System.out.println("dec_list -> dec_list; decl"); :}
+           | decl {: System.out.println("dec_list -> decl"); :};
 
-decl ::= ident_list DECCHAR type;
+decl ::= ident_list DECCHAR type {: System.out.println("decl -> ident_list: type"); :};
 
-ident_list ::= ident_list ENUMCHAR IDENTIFIER
-             | IDENTIFIER;
+ident_list ::= ident_list ENUMCHAR IDENTIFIER  {: System.out.println("ident_list -> ident_list, identifier"); :}
+             | IDENTIFIER  {: System.out.println("ident_list -> identifier"); :};
 
-type ::= INTEGER | REAL | BOOLEAN | CHAR;
+type ::= INTEGER | REAL | BOOLEAN | CHAR {: System.out.println("type -> integer | real | boolean | char"); :};
 
-compound_stmt ::= BEGIN stmt_list END;
+compound_stmt ::= BEGIN stmt_list END {: System.out.println("compound_stmt -> begin stmt_list end"); :};
 
-stmt_list ::= stmt_list ENUMCHAR stmt
-            | stmt;
+stmt_list ::= stmt_list EOLCHAR stmt {: System.out.println("stmt_list -> stmt_list; stmt"); :}
+            | stmt  {: System.out.println("stmt_list -> stmt"); :};
 
-stmt ::= assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt;
+stmt ::= assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt {: System.out.println("stmt -> assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt"); :};
 
 assign_stmt ::= IDENTIFIER ASSIGNCHAR expr;
 
@@ -73,7 +87,7 @@ cond ::= expr;
 loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix;
 
 stmt_prefix ::= WHILE cond
-              | ; /* vazio */
+              | /* vazio */;
 
 stmt_suffix ::= UNTIL cond
               | END;

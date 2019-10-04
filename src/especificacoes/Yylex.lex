@@ -1,4 +1,4 @@
-/* Analisador LÃ©xico para linguagem MLM */
+/* Analisador Léxico para linguagem MLM */
 
 package pacotePrincipal;
 
@@ -8,7 +8,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 %%
 
-/* procedimentos */
+/* Procedimentos personalizado para o analisador léxico */
 %{
     ComplexSymbolFactory symbolFactory;
 
@@ -43,13 +43,9 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %line
 %column
 
-%eofval{
-     return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
-%eofval}
-
 /* definicoes regulares */
-delim=\r|\n|[\r\n]|\ |\t|\f
-stoken={delim}+
+delimin=\r|\n|\r\n|[ \t\f]
+stoken=[delimin]+
 letter=[a-zA-Z]
 digit=[0-9]
 identifier={letter}({letter}|{digit})*
@@ -63,10 +59,9 @@ char_constant=\'[^\r\n]\'
 boolean_constant=false|true
 
 %% /* regras de traducao */
-{stoken}     { /* ignora */ }
 
 <YYINITIAL> {
-    /* operadores de relaÃ§Ã£o */
+    /* operadores de relação */
     "="      { return symbol("equal", RELOP, Integer.valueOf(EQUAL)); }
     "<"      { return symbol("less", RELOP, Integer.valueOf(LESS)); }
     "<="     { return symbol("lessequal", RELOP, Integer.valueOf(LESSEQUAL)); }
@@ -75,12 +70,12 @@ boolean_constant=false|true
     "!="     { return symbol("different", RELOP, Integer.valueOf(DIFFERENT)); }
     "not"    { return symbol("not", RELOP, Integer.valueOf(NOT)); }
 
-    /* operadores de adiÃ§Ã£o */
+    /* operadores de adição */
     "+"    { return symbol("plus", ADDOP, Integer.valueOf(PLUS)); }
     "-"    { return symbol("minus", ADDOP, Integer.valueOf(ADDOP)); }
     "or"   { return symbol("or", ADDOP, Integer.valueOf(OR)); }
 
-    /* operadores de multiplicaÃ§Ã£o */
+    /* operadores de multiplicação */
     "*"      { return symbol("times", MULOP, Integer.valueOf(TIMES)); }
     "/"      { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
     "div"    { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
@@ -111,16 +106,21 @@ boolean_constant=false|true
     "("  { return symbol("openparchar", OPENPARCHAR); }
     ")"  { return symbol("closeparchar", CLOSEPARCHAR); }
     ","  { return symbol("enumchar", ENUMCHAR); }
+
+    /* constantes */
+    {boolean_constant}  { return symbol("bool_const", BOOLEAN, Boolean.valueOf(Boolean.parseBoolean(yytext()))); }
+    {integer_constant}  { return symbol("int_const", INTEGER, Integer.valueOf(Integer.parseInt(yytext()))); }
+    {real_constant}     { return symbol("real_const", REAL, Float.valueOf(Float.parseFloat(yytext()))); }
+    {char_constant}     { return symbol("char_const", CHAR, Character.valueOf(yytext().charAt(1))); }
+
+    /* outros */
+    {identifier} { return symbol("identifier", IDENTIFIER, yytext()); }
+
+    /* espaço em branco */
+    {stoken}     { /* ignora */ }
 }
 
-/* constantes */
-{boolean_constant}  { return symbol("bool_const", BOOLEAN, Boolean.valueOf(Boolean.parseBoolean(yytext()))); }
-{integer_constant}  { return symbol("int_const", INTEGER, Integer.valueOf(Integer.parseInt(yytext()))); }
-{real_constant}     { return symbol("real_const", REAL, Float.valueOf(Float.parseFloat(yytext()))); }
-{char_constant}     { return symbol("char_const", CHAR, Character.valueOf(yytext().charAt(1))); }
-
-/* outros */
-{identifier} { return symbol("identifier", IDENTIFIER, yytext()); }
+<<EOF>>                          { return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1)); }
 
 /* erro */
-[^]         { exibirErro("Caractere ilegal: " + yytext()); }
+[^]         { exibirErro("Caractere não esperado: " + yytext()); }

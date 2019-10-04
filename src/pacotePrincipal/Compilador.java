@@ -34,15 +34,17 @@ public class Compilador {
 			System.exit(1);
 		}		
 		try {    
-			AnalisadorLexico al = new AnalisadorLexico(sr);
 			ComplexSymbolFactory csf = new ComplexSymbolFactory();
+			AnalisadorLexico al = new AnalisadorLexico(sr, csf);
 			ScannerBuffer scanner = new ScannerBuffer(al);
 			AnalisadorSintatico sint = new AnalisadorSintatico(scanner, csf);
 			System.out.println("Analisando arquivo " + args[0] + "...");
 			sint.parse();
+			System.out.println("Aceito.");
 	        
 		} catch (Exception ex) {
 			System.out.println(String.format("Ocorreu um erro ao processar o arquivo: %s.", ex.getMessage()));
+			ex.printStackTrace();
 			System.exit(1);
 		}
 		

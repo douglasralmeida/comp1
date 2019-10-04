@@ -1,12 +1,8 @@
-program OlaMundo;
+program teste;
 
 b: boolean;
-c: char;
+c: boolean
 
 begin
-   b := true;
-   c := 'X';
-   write(c);
-   if b = false then
-     write('l');
+  b := true
 end

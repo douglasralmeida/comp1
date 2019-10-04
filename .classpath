@@ -11,7 +11,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Github/comp1/lib/java_cup.jar">
+	<classpathentry kind="lib" path="D:/Github/comp1/lib/java_cup.jar" sourcepath="D:/cups">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
