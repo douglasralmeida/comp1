@@ -1,4 +1,4 @@
-/* Analisador Sintático para linguagem MLM */
+/* Analisador Sintï¿½tico para linguagem MLM */
 
 package pacotePrincipal;
 
@@ -10,7 +10,7 @@ import java_cup.runtime.Symbol;
 
 class AnalisadorSintatico;
 
-/* Código Java personalizado para o analisador sintático */
+/* Cï¿½digo Java personalizado para o analisador sintï¿½tico */
 parser code {:
     protected void report_expected_token_ids(){
         List<Integer> ids = expected_token_ids();
@@ -19,7 +19,7 @@ parser code {:
         for (Integer expected: ids) {
             list.add(symbl_name_from_id(expected));
         }
-        System.out.println("Eram esperadas uma das expressões: " + list + ".");
+        System.out.println("Eram esperadas uma das expressï¿½es: " + list + ".");
     }
 
     public String symbl_name_from_id(int id){
@@ -42,19 +42,19 @@ parser code {:
     public void syntax_error(Symbol s) {
         ComplexSymbol cs = (ComplexSymbol)s;
         
-        System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressão \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
+        System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressï¿½o \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
 :}
 
-/* Terminais (tokens retornados pelo analisador léxico). */
+/* Terminais (tokens retornados pelo analisador lï¿½xico). */
 terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
                     END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
                     EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,
                     MINUSCHAR, NOT, EQUAL, LESS, GREATER, PLUS, TIMES, DIVIDED, LESSEQUAL,
                     GRATEREQUAL, DIFFERENT, OR, AND, MOD;
 
-/* Não terminais */
+/* Nï¿½o terminais */
 non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 
                     stmt_list, stmt,
                     assign_stmt, if_stmt, cond, loop_stmt, stmt_prefix, stmt_suffix,
@@ -62,7 +62,7 @@ non terminal        program, dec_list, decl, ident_list, type, compound_stmt,
                     factor_a, factor, constant,
                     if_stmt_a, if_stmt_b;
 
-/* Precedência */
+/* PrecedÃªncia */
 precedence left ADDOP;
 precedence left MULOP;
 
@@ -98,7 +98,7 @@ assign_stmt ::= IDENTIFIER ASSIGNCHAR expr {: System.out.println("assign_stmt ->
 if_stmt ::= IF cond THEN stmt
           | IF cond THEN stmt ELSE stmt; */
 
-if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a;
+if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a {: System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); :};
 
 if_stmt_b ::= IF cond THEN stmt {: System.out.println("if_stmt -> IF cond THEN stmt"); :}
             | IF cond THEN if_stmt_a ELSE if_stmt_b {: System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); :};

@@ -1,12 +1,9 @@
 program OlaMundo;
 
-b: boolean;
-c: char
+b: boolean
 
 begin
    b := true;
-   c := 'X';
-   write(c);
    if b = false integer then
      write('l')
 end

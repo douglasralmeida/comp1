@@ -103,10 +103,6 @@ ident_list -> identifier
 type -> boolean
 decl -> ident_list: type
 dec_list -> decl
-ident_list -> identifier
-type -> char
-decl -> ident_list: type
-dec_list -> dec_list; decl
 constant -> true
 factor -> constant
 factor_a -> factor
@@ -115,27 +111,11 @@ simple_expr -> term
 expr -> simple_expr
 assign_stmt -> IDENTIFIER := expr
 stmt_list -> stmt
-constant -> 'X'
-factor -> constant
-factor_a -> factor
-term -> factor_a
-simple_expr -> term
-expr -> simple_expr
-assign_stmt -> IDENTIFIER := expr
-stmt_list -> stmt_list; stmt
 factor -> IDENTIFIER
 factor_a -> factor
 term -> factor_a
 simple_expr -> term
-expr -> simple_expr
-expr_list -> expr
-write_stmt -> WRITE(expr_list)
-stmt_list -> stmt_list; stmt
-factor -> IDENTIFIER
-factor_a -> factor
-term -> factor_a
-simple_expr -> term
-Um erro de sintaxe foi encontrado com a expressão "integer" na linha 10, coluna 17.
+Um erro de sintaxe foi encontrado com a expressão "integer" na linha 7, coluna 17.
 Eram esperadas uma das expressões: [THEN].
 Ocorreu um erro ao processar o arquivo: Can't recover from previous error(s).
 
