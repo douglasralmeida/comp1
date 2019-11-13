@@ -1,21 +1,16 @@
 package arvoreSintaxe;
 
-import java.util.ArrayList;
-
-
 public class Program {
 
-	public ArrayList<Decl> dec_list;
+	public DeclList dec_list;
 	
 	public CompoundStmt compound_stmt;
 	
-	public Program(ArrayList<Decl> list, CompoundStmt stmt) {
+	public boolean erroSemantico;
+	
+	public Program(DeclList list, CompoundStmt stmt) {		
 		dec_list = list;
 		compound_stmt = stmt;
+		erroSemantico = list.erroSemantico || stmt.erroSemantico;
 	}
-	
-	public void aceitar() {
-		
-	}
-
 }

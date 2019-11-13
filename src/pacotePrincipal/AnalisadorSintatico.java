@@ -7,9 +7,11 @@ package pacotePrincipal;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import java_cup.runtime.Symbol;
+import arvoreSintaxe.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -248,32 +250,33 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
         for (Integer expected: ids) {
             list.add(symbl_name_from_id(expected));
         }
-        System.out.println("Eram esperadas uma das expressões: " + list + ".");
+        System.out.println("Eram esperadas uma das expressoes: " + list + ".");
     }
 
     public String symbl_name_from_id(int id){
-	  Field[] fields = getSymbolContainer().getFields();
+	      Field[] fields = getSymbolContainer().getFields();
 
-	  for (Field f : fields) {
-		  try {
-			if (f.getInt(null)==id)
-			  return f.getName();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	  }
-
-	  return "invalid symbol id";
+	      for (Field f : fields) {
+		        try {
+			          if (f.getInt(null)==id)
+			              return f.getName();
+		        } catch (IllegalArgumentException e) {
+		  	        e.printStackTrace();
+		        } catch (IllegalAccessException e) {
+			        e.printStackTrace();
+		        }
+	      }
+	  return "sÃ­mbolo id invÃ¡lido.";
   }
 
     public void syntax_error(Symbol s) {
         ComplexSymbol cs = (ComplexSymbol)s;
         
-        System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressão \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
+        System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
+
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -318,7 +321,20 @@ class CUP$AnalisadorSintatico$actions {
           case 1: // program ::= PROGRAM IDENTIFIER EOLCHAR dec_list compound_stmt 
             {
               Object RESULT =null;
-		 System.out.println("program -> PROGRAM identifier; dec_list compound_stmt"); 
+		int dlleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int dlright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object dl = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		 
+                DeclList lista = (DeclList)dl;
+                CompoundStmt compound = new CompoundStmt(null);
+
+                Program program = new Program(lista, compound);
+                if (program.erroSemantico)
+                	report_fatal_error("", null);
+                lista.show();
+
+                RESULT = program;
+            
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-4)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -327,7 +343,24 @@ class CUP$AnalisadorSintatico$actions {
           case 2: // dec_list ::= dec_list EOLCHAR decl 
             {
               Object RESULT =null;
-		 System.out.println("dec_list -> dec_list; decl"); 
+		int dlleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int dlright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object dl = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int dleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object d = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+            DeclList decl_list;
+            DeclList lista = (DeclList)d;
+
+            if (dl == null)
+		    	decl_list = new DeclList();
+		    else
+		    	decl_list = (DeclList)dl;
+            decl_list.addAll(lista);
+
+            RESULT = decl_list;
+        
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("dec_list",1, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -336,7 +369,12 @@ class CUP$AnalisadorSintatico$actions {
           case 3: // dec_list ::= decl 
             {
               Object RESULT =null;
-		 System.out.println("dec_list -> decl"); 
+		int dleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object d = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+            RESULT = d;
+        
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("dec_list",1, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -345,7 +383,21 @@ class CUP$AnalisadorSintatico$actions {
           case 4: // decl ::= ident_list DECCHAR type 
             {
               Object RESULT =null;
-		 System.out.println("decl -> ident_list: type"); 
+		int illeft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int ilright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object il = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int tleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+            DeclList dec_list = new DeclList();
+            ArrayList<String> lista = (ArrayList<String>)il;
+
+            for (String s: lista)
+            	dec_list.add(new Decl(s, (Type)t));
+
+            RESULT = dec_list;
+        
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("decl",2, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -354,7 +406,16 @@ class CUP$AnalisadorSintatico$actions {
           case 5: // ident_list ::= ident_list ENUMCHAR IDENTIFIER 
             {
               Object RESULT =null;
-		 System.out.println("ident_list -> ident_list, identifier"); 
+		int illeft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int ilright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object il = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int nomeleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int nomeright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object nome = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+                ArrayList<String> lista = (ArrayList<String>)il;
+                lista.add((String)nome);
+            
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("ident_list",3, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -363,7 +424,14 @@ class CUP$AnalisadorSintatico$actions {
           case 6: // ident_list ::= IDENTIFIER 
             {
               Object RESULT =null;
-		 System.out.println("ident_list -> identifier"); 
+		int nomeleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int nomeright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object nome = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+                ArrayList<String> il = new ArrayList<String>();
+                il.add((String)nome);
+                RESULT = il;
+            
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("ident_list",3, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -372,7 +440,9 @@ class CUP$AnalisadorSintatico$actions {
           case 7: // type ::= INTEGER 
             {
               Object RESULT =null;
-		 System.out.println("type -> integer"); 
+		
+        RESULT = Type.INTEGER;
+    
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -381,7 +451,9 @@ class CUP$AnalisadorSintatico$actions {
           case 8: // type ::= REAL 
             {
               Object RESULT =null;
-		 System.out.println("type -> real"); 
+		
+        RESULT = Type.REAL;
+    
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -390,7 +462,9 @@ class CUP$AnalisadorSintatico$actions {
           case 9: // type ::= BOOLEAN 
             {
               Object RESULT =null;
-		 System.out.println("type -> boolean"); 
+		 
+        RESULT = Type.BOOLEAN;
+    
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -399,7 +473,9 @@ class CUP$AnalisadorSintatico$actions {
           case 10: // type ::= CHAR 
             {
               Object RESULT =null;
-		 System.out.println("type -> char"); 
+		
+          RESULT = Type.CHAR;
+    
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("type",4, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -498,7 +574,7 @@ class CUP$AnalisadorSintatico$actions {
           case 21: // if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a 
             {
               Object RESULT =null;
-
+		 System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_a",23, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-5)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;

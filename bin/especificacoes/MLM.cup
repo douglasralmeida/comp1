@@ -4,9 +4,12 @@ package pacotePrincipal;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import java_cup.runtime.Symbol;
+
+import arvoreSintaxe.*;
 
 class AnalisadorSintatico;
 
@@ -44,6 +47,8 @@ parser code {:
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
+
+
 :}
 
 /* Terminais (tokens retornados pelo analisador léxico). */
@@ -53,7 +58,7 @@ terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, 
                     MINUSCHAR, NOT, EQUAL, LESS, GREATER, PLUS, TIMES, DIVIDED, LESSEQUAL,
                     GRATEREQUAL, DIFFERENT, OR, AND, MOD;
 
-/* N�o terminais */
+/* Nao terminais */
 non terminal        program, dec_list, decl, ident_list, type, compound_stmt, 
                     stmt_list, stmt,
                     assign_stmt, if_stmt, cond, loop_stmt, stmt_prefix, stmt_suffix,
@@ -69,22 +74,71 @@ precedence left MULOP;
 start with program;
 
 /* Regras gramaticais */
-program ::= PROGRAM IDENTIFIER EOLCHAR dec_list compound_stmt {: System.out.println("program -> PROGRAM identifier; dec_list compound_stmt"); :};
+program ::= PROGRAM IDENTIFIER EOLCHAR dec_list:dl compound_stmt:cs {: 
+                DeclList lista = (DeclList)dl;
+                CompoundStmt compound = (CompoundStmt)cs;
 
-dec_list ::= dec_list EOLCHAR decl {: System.out.println("dec_list -> dec_list; decl"); :}
-           | decl {: System.out.println("dec_list -> decl"); :};
+                Program program = new Program(lista, compound);
+                if (program.erroSemantico)
+                	report_fatal_error("", null);
 
-decl ::= ident_list DECCHAR type {: System.out.println("decl -> ident_list: type"); :};
+                RESULT = program;
+            :};
 
-ident_list ::= ident_list ENUMCHAR IDENTIFIER  {: System.out.println("ident_list -> ident_list, identifier"); :}
-             | IDENTIFIER  {: System.out.println("ident_list -> identifier"); :};
+dec_list ::= dec_list:dl EOLCHAR decl:d {:
+            DeclList decl_list;
+            DeclList lista = (DeclList)d;
 
-type ::= INTEGER {: System.out.println("type -> integer"); :}
-       | REAL {: System.out.println("type -> real"); :}
-       | BOOLEAN {: System.out.println("type -> boolean"); :}
-       | CHAR {: System.out.println("type -> char"); :};
+            if (dl == null)
+		    	decl_list = new DeclList();
+		    else
+		    	decl_list = (DeclList)dl;
+            decl_list.addAll(lista);
 
-compound_stmt ::= BEGIN stmt_list END {: System.out.println("compound_stmt -> begin stmt_list end"); :};
+            RESULT = decl_list;
+        :}
+        | decl:d {:
+            RESULT = d;
+        :};
+
+decl ::= ident_list:il DECCHAR type:t {:
+            DeclList dec_list = new DeclList();
+            ArrayList<String> lista = (ArrayList<String>)il;
+
+            for (String s: lista)
+            	dec_list.add(new Decl(s, (Type)t));
+
+            RESULT = dec_list;
+        :};
+
+ident_list ::= ident_list:il ENUMCHAR IDENTIFIER:nome  {:
+                ArrayList<String> lista = (ArrayList<String>)il;
+                lista.add((String)nome);
+            :}
+            | IDENTIFIER:nome  {: 
+                ArrayList<String> il = new ArrayList<String>();
+                il.add((String)nome);
+                RESULT = il;
+            :};
+
+type ::= INTEGER {:
+        RESULT = Type.INTEGER;
+    :}
+    | REAL {:
+        RESULT = Type.REAL;
+    :}
+    | BOOLEAN {: 
+        RESULT = Type.BOOLEAN;
+    :}
+    | CHAR {:
+          RESULT = Type.CHAR;
+    :};
+
+compound_stmt ::= BEGIN stmt_list END {:
+                    CompoundStmt compound = new CompoundStmt();
+                    
+                    RESULT = compound;
+                :};
 
 stmt_list ::= stmt_list EOLCHAR stmt {: System.out.println("stmt_list -> stmt_list; stmt"); :}
             | stmt  {: System.out.println("stmt_list -> stmt"); :};

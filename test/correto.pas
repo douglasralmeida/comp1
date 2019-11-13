@@ -2,7 +2,7 @@ program teste;
 
 b: boolean;
 c: char;
-d: integer
+b: integer
 
 begin
   b := true;

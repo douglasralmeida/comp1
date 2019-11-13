@@ -1,13 +1,18 @@
 package arvoreSintaxe;
 
-import java.util.ArrayList;
-
-public class CompoundStmt {
+public class CompoundStmt extends Stmt {
 	
-	ArrayList<Stmt> stmt_list;
+	StmtList stmt_list;
+	
+	public boolean erroSemantico;
 
-	public CompoundStmt(ArrayList<Stmt> list) {
+	public CompoundStmt(StmtList list) {
 		stmt_list = list;
+		erroSemantico = list.erroSemantico;
 	}
+	
+	public void show() {
+		stmt_list.show();
+	}	
 
 }
