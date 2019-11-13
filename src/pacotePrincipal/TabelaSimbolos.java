@@ -60,7 +60,7 @@ public class TabelaSimbolos {
 		}
 	}
 
-	public void Entrada_Bloco()  {
+	public void abrirBloco()  {
 		nivel++;
 		if (nivel > NIVELMAX)
 			exibirErro(1);
@@ -68,7 +68,7 @@ public class TabelaSimbolos {
 			escopo[nivel] = 0; 
 	}
  
-	public void Saida_Bloco() {
+	public void sairBloco() {
 		if (escopo[nivel] != 0)
 			ultimoElemento = escopo[nivel];
 		nivel--;

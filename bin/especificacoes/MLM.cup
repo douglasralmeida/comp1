@@ -1,4 +1,4 @@
-/* Analisador Sint�tico para linguagem MLM */
+/* Analisador Sintático para linguagem MLM */
 
 package pacotePrincipal;
 
@@ -10,7 +10,7 @@ import java_cup.runtime.Symbol;
 
 class AnalisadorSintatico;
 
-/* C�digo Java personalizado para o analisador sint�tico */
+/* Código Java personalizado para o analisador sintático */
 parser code {:
     protected void report_expected_token_ids(){
         List<Integer> ids = expected_token_ids();
@@ -19,35 +19,34 @@ parser code {:
         for (Integer expected: ids) {
             list.add(symbl_name_from_id(expected));
         }
-        System.out.println("Eram esperadas uma das express�es: " + list + ".");
+        System.out.println("Eram esperadas uma das expressoes: " + list + ".");
     }
 
     public String symbl_name_from_id(int id){
-	  Field[] fields = getSymbolContainer().getFields();
+	      Field[] fields = getSymbolContainer().getFields();
 
-	  for (Field f : fields) {
-		  try {
-			if (f.getInt(null)==id)
-			  return f.getName();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	  }
-
-	  return "invalid symbol id";
+	      for (Field f : fields) {
+		        try {
+			          if (f.getInt(null)==id)
+			              return f.getName();
+		        } catch (IllegalArgumentException e) {
+		  	        e.printStackTrace();
+		        } catch (IllegalAccessException e) {
+			        e.printStackTrace();
+		        }
+	      }
+	  return "símbolo id inválido.";
   }
 
     public void syntax_error(Symbol s) {
         ComplexSymbol cs = (ComplexSymbol)s;
         
-        System.out.println(String.format("Um erro de sintaxe foi encontrado com a express�o \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
+        System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
 :}
 
-/* Terminais (tokens retornados pelo analisador l�xico). */
+/* Terminais (tokens retornados pelo analisador léxico). */
 terminal            ADDOP, RELOP, MULOP, PROGRAM, INTEGER, REAL, BOOLEAN, CHAR, BEGIN,
                     END, IF, THEN, ELSE, DO, WHILE, UNTIL, READ, WRITE, IDENTIFIER, 
                     EOLCHAR, DECCHAR, ENUMCHAR, ASSIGNCHAR, OPENPARCHAR, CLOSEPARCHAR,

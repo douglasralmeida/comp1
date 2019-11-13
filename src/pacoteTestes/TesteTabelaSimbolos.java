@@ -8,7 +8,7 @@ public final class TesteTabelaSimbolos {
 	public static void main(String[] args) {
 		s = new TabelaSimbolos();
 		
-		s.Entrada_Bloco(); 
+		s.abrirBloco(); 
 		s.adicionar("ab","int");
 		s.adicionar("bb","int");
 		s.adicionar("cb","int"); 
@@ -21,9 +21,9 @@ public final class TesteTabelaSimbolos {
 		s.obter("ab");
 		s.obter("db");
 		
-		s.Entrada_Bloco();
+		s.abrirBloco();
 		s.obter("ab"); 
-		s.obter("db"); 
+		s.obter("db");
 		
 		s.adicionar("ib","int"); 
 		s.adicionar("jb","int"); 
@@ -37,7 +37,7 @@ public final class TesteTabelaSimbolos {
 		s.obter("ab");
 		s.obter("db");
 
-		s.Entrada_Bloco();
+		s.abrirBloco();
 		s.obter("ab");
 		s.obter("db");
 		s.adicionar("rb","int");
@@ -52,14 +52,16 @@ public final class TesteTabelaSimbolos {
 		
 		s.obter("ab");
 		s.obter("db");
-		s.Saida_Bloco();
+		s.sairBloco();
 		
 		s.obter("ab");
 		s.obter("db"); 
- 		s.Saida_Bloco();
- 
+ 		s.sairBloco();
+ 		
  		s.obter("ab");
  		s.obter("db"); 
- 		s.Saida_Bloco();
+ 		s.sairBloco();
+ 		
+ 		
 	}
 }
