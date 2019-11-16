@@ -1,4 +1,4 @@
-/* Analisador Léxico para linguagem MLM */
+/* Analisador Lï¿½xico para linguagem MLM */
 
 package pacotePrincipal;
 
@@ -8,7 +8,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 
 %%
 
-/* Procedimentos personalizado para o analisador léxico */
+/* Procedimentos personalizado para o analisador lï¿½xico */
 %{
     ComplexSymbolFactory symbolFactory;
 
@@ -61,7 +61,7 @@ boolean_constant=false|true
 %% /* regras de traducao */
 
 <YYINITIAL> {
-    /* operadores de relação */
+    /* operadores de relacao */
     "="      { return symbol("equal", RELOP, Integer.valueOf(EQUAL)); }
     "<"      { return symbol("less", RELOP, Integer.valueOf(LESS)); }
     "<="     { return symbol("lessequal", RELOP, Integer.valueOf(LESSEQUAL)); }
@@ -70,12 +70,12 @@ boolean_constant=false|true
     "!="     { return symbol("different", RELOP, Integer.valueOf(DIFFERENT)); }
     "not"    { return symbol("not", RELOP, Integer.valueOf(NOT)); }
 
-    /* operadores de adição */
+    /* operadores de adicao */
     "+"    { return symbol("plus", ADDOP, Integer.valueOf(PLUS)); }
     "-"    { return symbol("minus", ADDOP, Integer.valueOf(ADDOP)); }
     "or"   { return symbol("or", ADDOP, Integer.valueOf(OR)); }
 
-    /* operadores de multiplicação */
+    /* operadores de multiplicacao */
     "*"      { return symbol("times", MULOP, Integer.valueOf(TIMES)); }
     "/"      { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
     "div"    { return symbol("divided", MULOP, Integer.valueOf(DIVIDED)); }
@@ -116,11 +116,11 @@ boolean_constant=false|true
     /* outros */
     {identifier} { return symbol("identifier", IDENTIFIER, yytext()); }
 
-    /* espaço em branco */
+    /* espaco em branco */
     {stoken}     { /* ignora */ }
 }
 
 <<EOF>>                          { return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1)); }
 
 /* erro */
-[^]         { exibirErro("Caractere não esperado: " + yytext()); }
+[^]         { exibirErro("Caractere nï¿½o esperado: " + yytext()); }

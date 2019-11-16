@@ -1,25 +1,16 @@
 package arvoreSintaxe;
 
-public class Decl {
-		
-	public String identifier;
+import java.util.ArrayList;
 
+public class Decl {
+	
+	public ArrayList<String> lista;
+	
 	public Type type;
-	
-	public Decl(String id, Type newtype) {
-		type = newtype;
-		identifier = id;
+
+	public Decl(ArrayList<String> l, Type t) {
+		lista = l;
+		type = t;
 	}
-	
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		return identifier.equals(((Decl)obj).identifier);
-	}
-	
-	public String toString() {
-		return identifier + ": " + type;
-	}
+
 }

@@ -12,6 +12,7 @@ public class IfStmt extends Stmt {
 		cond = newcond;
 		then_stmt = t_stmt;
 		else_stmt = e_stmt;
+		erroSemantico = false;
 	}
 
 }

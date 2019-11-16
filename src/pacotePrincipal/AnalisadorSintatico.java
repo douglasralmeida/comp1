@@ -242,6 +242,16 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
   public int error_sym() {return 1;}
 
 
+  /** User initialization code. */
+  public void user_init() throws java.lang.Exception
+    {
+
+    tabela = new TabelaSimbolos();
+
+    }
+
+
+    TabelaSimbolos tabela;
 
     protected void report_expected_token_ids(){
         List<Integer> ids = expected_token_ids();
@@ -275,8 +285,6 @@ public class AnalisadorSintatico extends java_cup.runtime.lr_parser {
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
-
-
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -324,17 +332,18 @@ class CUP$AnalisadorSintatico$actions {
 		int dlleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
 		int dlright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
 		Object dl = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		int csleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int csright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object cs = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		 
-                DeclList lista = (DeclList)dl;
-                CompoundStmt compound = new CompoundStmt(null);
+    CompoundStmt compound = (CompoundStmt)cs;
 
-                Program program = new Program(lista, compound);
-                if (program.erroSemantico)
-                	report_fatal_error("", null);
-                lista.show();
+    Program program = new Program(compound, tabela);
+    if (program.possuiErroSemantico())
+        report_fatal_error("", null);
 
-                RESULT = program;
-            
+    RESULT = program;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-4)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -350,17 +359,11 @@ class CUP$AnalisadorSintatico$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object d = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		
-            DeclList decl_list;
-            DeclList lista = (DeclList)d;
+    Decl decl = (Decl)d;
 
-            if (dl == null)
-		    	decl_list = new DeclList();
-		    else
-		    	decl_list = (DeclList)dl;
-            decl_list.addAll(lista);
+    for (String s: decl.lista)
+        tabela.add(new Simbolo(s, decl.type));
 
-            RESULT = decl_list;
-        
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("dec_list",1, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -373,8 +376,8 @@ class CUP$AnalisadorSintatico$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object d = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		
-            RESULT = d;
-        
+    RESULT = d;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("dec_list",1, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -390,14 +393,11 @@ class CUP$AnalisadorSintatico$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		
-            DeclList dec_list = new DeclList();
-            ArrayList<String> lista = (ArrayList<String>)il;
+    ArrayList<String> lista = (ArrayList<String>)il;
+    Decl decl = new Decl(lista, (Type)t);
 
-            for (String s: lista)
-            	dec_list.add(new Decl(s, (Type)t));
+    RESULT = decl;
 
-            RESULT = dec_list;
-        
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("decl",2, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -413,9 +413,9 @@ class CUP$AnalisadorSintatico$actions {
 		int nomeright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object nome = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		
-                ArrayList<String> lista = (ArrayList<String>)il;
-                lista.add((String)nome);
-            
+    ArrayList<String> lista = (ArrayList<String>)il;
+    lista.add((String)nome);
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("ident_list",3, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -428,10 +428,10 @@ class CUP$AnalisadorSintatico$actions {
 		int nomeright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object nome = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
 		 
-                ArrayList<String> il = new ArrayList<String>();
-                il.add((String)nome);
-                RESULT = il;
-            
+    ArrayList<String> il = new ArrayList<String>();
+    il.add((String)nome);
+    RESULT = il;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("ident_list",3, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -484,7 +484,15 @@ class CUP$AnalisadorSintatico$actions {
           case 11: // compound_stmt ::= BEGIN stmt_list END 
             {
               Object RESULT =null;
-		 System.out.println("compound_stmt -> begin stmt_list end"); 
+		int slleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int slright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object sl = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		
+    StmtList lista = (StmtList)sl;
+    CompoundStmt compound = new CompoundStmt(lista);
+                    
+    RESULT = compound;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("compound_stmt",5, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -493,7 +501,24 @@ class CUP$AnalisadorSintatico$actions {
           case 12: // stmt_list ::= stmt_list EOLCHAR stmt 
             {
               Object RESULT =null;
-		 System.out.println("stmt_list -> stmt_list; stmt"); 
+		int slleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int slright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object sl = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object s = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    StmtList stmt_list;
+    Stmt stmt = (Stmt)s;
+
+    if (sl == null)
+        stmt_list = new StmtList();
+    else
+        stmt_list = (StmtList)sl;
+    stmt_list.add(stmt);
+
+    RESULT = stmt_list;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_list",6, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -502,7 +527,17 @@ class CUP$AnalisadorSintatico$actions {
           case 13: // stmt_list ::= stmt 
             {
               Object RESULT =null;
-		 System.out.println("stmt_list -> stmt"); 
+		int sleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object s = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Stmt stmt = (Stmt)s;
+    StmtList stmt_list = new StmtList();
+
+    stmt_list.add(stmt);
+
+    RESULT = stmt_list;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_list",6, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -511,6 +546,11 @@ class CUP$AnalisadorSintatico$actions {
           case 14: // stmt ::= assign_stmt 
             {
               Object RESULT =null;
+		int asleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int asright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object as = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    RESULT = as;
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -520,6 +560,11 @@ class CUP$AnalisadorSintatico$actions {
           case 15: // stmt ::= if_stmt 
             {
               Object RESULT =null;
+		int isleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int isright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object is = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = is;
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -529,6 +574,11 @@ class CUP$AnalisadorSintatico$actions {
           case 16: // stmt ::= loop_stmt 
             {
               Object RESULT =null;
+		int lsleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int lsright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object ls = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = ls;
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -538,6 +588,11 @@ class CUP$AnalisadorSintatico$actions {
           case 17: // stmt ::= read_stmt 
             {
               Object RESULT =null;
+		int rsleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int rsright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object rs = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = rs;
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -547,6 +602,11 @@ class CUP$AnalisadorSintatico$actions {
           case 18: // stmt ::= write_stmt 
             {
               Object RESULT =null;
+		int wsleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int wsright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object ws = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = ws;
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -556,7 +616,12 @@ class CUP$AnalisadorSintatico$actions {
           case 19: // stmt ::= compound_stmt 
             {
               Object RESULT =null;
-		 System.out.println("stmt -> assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt"); 
+		int csleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int csright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object cs = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = cs;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt",7, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -565,7 +630,19 @@ class CUP$AnalisadorSintatico$actions {
           case 20: // assign_stmt ::= IDENTIFIER ASSIGNCHAR expr 
             {
               Object RESULT =null;
-		 System.out.println("assign_stmt -> IDENTIFIER := expr"); 
+		int nleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object n = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    String nome = (String)n;
+    Expr exp = (Expr)e;
+    AssignStmt assign_stmt = new AssignStmt(nome, exp);
+
+    RESULT = assign_stmt;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("assign_stmt",8, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -574,7 +651,9 @@ class CUP$AnalisadorSintatico$actions {
           case 21: // if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a 
             {
               Object RESULT =null;
-		 System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_a",23, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-5)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -583,7 +662,9 @@ class CUP$AnalisadorSintatico$actions {
           case 22: // if_stmt_b ::= IF cond THEN stmt 
             {
               Object RESULT =null;
-		 System.out.println("if_stmt -> IF cond THEN stmt"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_b",24, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -592,7 +673,9 @@ class CUP$AnalisadorSintatico$actions {
           case 23: // if_stmt_b ::= IF cond THEN if_stmt_a ELSE if_stmt_b 
             {
               Object RESULT =null;
-		 System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt_b",24, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-5)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -610,6 +693,8 @@ class CUP$AnalisadorSintatico$actions {
           case 25: // if_stmt ::= if_stmt_b 
             {
               Object RESULT =null;
+		
+
 
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("if_stmt",9, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
@@ -619,7 +704,13 @@ class CUP$AnalisadorSintatico$actions {
           case 26: // cond ::= expr 
             {
               Object RESULT =null;
-		 System.out.println("cond -> expr"); 
+		int eleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Cond cond = new Cond((Expr)e);
+    RESULT = cond;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("cond",10, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -628,7 +719,9 @@ class CUP$AnalisadorSintatico$actions {
           case 27: // loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix 
             {
               Object RESULT =null;
-		 System.out.println("loop_stmt -> stmt_prefix DO stmt_list stmt_suffix"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("loop_stmt",11, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -637,7 +730,9 @@ class CUP$AnalisadorSintatico$actions {
           case 28: // stmt_prefix ::= WHILE cond 
             {
               Object RESULT =null;
-		 System.out.println("stmt_prefix -> WHILE cond"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_prefix",12, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -646,7 +741,9 @@ class CUP$AnalisadorSintatico$actions {
           case 29: // stmt_prefix ::= 
             {
               Object RESULT =null;
-		 System.out.println("stmt_prefix -> e"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_prefix",12, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -655,7 +752,9 @@ class CUP$AnalisadorSintatico$actions {
           case 30: // stmt_suffix ::= UNTIL cond 
             {
               Object RESULT =null;
-		 System.out.println("stmt_suffix -> UNTIL cond"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_suffix",13, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -664,7 +763,9 @@ class CUP$AnalisadorSintatico$actions {
           case 31: // stmt_suffix ::= END 
             {
               Object RESULT =null;
-		 System.out.println("stmt_suffix -> e"); 
+		
+
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("stmt_suffix",13, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -673,7 +774,15 @@ class CUP$AnalisadorSintatico$actions {
           case 32: // read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR 
             {
               Object RESULT =null;
-		 System.out.println("read_stmt -> READ(ident_list)"); 
+		int illeft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int ilright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object il = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		
+    ArrayList<Identifier> lista = (ArrayList<Identifier>)il;
+    ReadStmt rs = new ReadStmt(lista);
+
+    RESULT = rs;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("read_stmt",14, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -682,7 +791,15 @@ class CUP$AnalisadorSintatico$actions {
           case 33: // write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR 
             {
               Object RESULT =null;
-		 System.out.println("write_stmt -> WRITE(expr_list)"); 
+		int elleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int elright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object el = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		
+    ArrayList<Expr> lista = (ArrayList<Expr>)el;
+    WriteStmt ws = new WriteStmt(lista);
+
+    RESULT = ws;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("write_stmt",15, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -691,7 +808,16 @@ class CUP$AnalisadorSintatico$actions {
           case 34: // expr_list ::= expr 
             {
               Object RESULT =null;
-		 System.out.println("expr_list -> expr"); 
+		int eleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr expr = (Expr)e;
+    ArrayList<Expr> lista = new ArrayList<Expr>();
+    lista.add(expr);
+
+    RESULT = lista;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr_list",16, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -700,7 +826,19 @@ class CUP$AnalisadorSintatico$actions {
           case 35: // expr_list ::= expr_list ENUMCHAR expr 
             {
               Object RESULT =null;
-		 System.out.println("expr_list -> expr_list; expr"); 
+		int lleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object l = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr expr = (Expr)e;
+    ArrayList<Expr> lista = (ArrayList<Expr>)l;
+    lista.add(expr);
+
+    RESULT = lista;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr_list",16, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -709,7 +847,12 @@ class CUP$AnalisadorSintatico$actions {
           case 36: // expr ::= simple_expr 
             {
               Object RESULT =null;
-		 System.out.println("expr -> simple_expr"); 
+		int seleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int seright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object se = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    RESULT = se;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr",17, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -718,10 +861,23 @@ class CUP$AnalisadorSintatico$actions {
           case 37: // expr ::= simple_expr RELOP simple_expr 
             {
               Object RESULT =null;
+		int seeleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int seeright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object see = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
 		int rleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
 		int rright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
 		Object r = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
-		 System.out.println("simple_expr RELOP simple_expr"); 
+		int sedleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int sedright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object sed = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr exp1 = (Expr)see;
+    Expr exp2 = (Expr)sed;
+    String relop = (String)r;
+    RelacExpr re = new RelacExpr(exp1, relop, exp2);
+
+    RESULT = re;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("expr",17, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -730,7 +886,12 @@ class CUP$AnalisadorSintatico$actions {
           case 38: // simple_expr ::= term 
             {
               Object RESULT =null;
-		 System.out.println("simple_expr -> term"); 
+		int tleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    RESULT = t;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("simple_expr",18, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -739,10 +900,23 @@ class CUP$AnalisadorSintatico$actions {
           case 39: // simple_expr ::= simple_expr ADDOP term 
             {
               Object RESULT =null;
+		int seleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int seright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object se = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
 		int aleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
-		 System.out.println("simple_expr ADDOP term"); 
+		int tleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr expr = (Expr)se;
+    Expr term = (Expr)t;
+    String addop = (String)a;
+    AddExpr ae = new AddExpr(expr, addop, term);
+
+    RESULT = ae;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("simple_expr",18, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -751,7 +925,12 @@ class CUP$AnalisadorSintatico$actions {
           case 40: // term ::= factor_a 
             {
               Object RESULT =null;
-		 System.out.println("term -> factor_a"); 
+		int fleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    RESULT = f;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("term",19, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -760,7 +939,23 @@ class CUP$AnalisadorSintatico$actions {
           case 41: // term ::= term MULOP factor_a 
             {
               Object RESULT =null;
-		 System.out.println("term MULOP factor_a"); 
+		int tleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)).value;
+		int mleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int mright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object m = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		int fleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr term = (Expr)t;
+    Expr factor = (Expr)f;
+    String mulop = (String)m;
+    MultiExpr me = new MultiExpr(term, mulop, factor);
+
+    RESULT = me;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("term",19, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -769,7 +964,15 @@ class CUP$AnalisadorSintatico$actions {
           case 42: // factor_a ::= MINUSCHAR factor 
             {
               Object RESULT =null;
-		 System.out.println("factor_a -> -factor"); 
+		int fleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr fac = (Expr)f;
+    MinusExpr me = new MinusExpr(fac);
+
+    RESULT = me;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor_a",20, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -778,7 +981,12 @@ class CUP$AnalisadorSintatico$actions {
           case 43: // factor_a ::= factor 
             {
               Object RESULT =null;
-		 System.out.println("factor_a -> factor"); 
+		int fleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    RESULT = f;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor_a",20, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -787,7 +995,16 @@ class CUP$AnalisadorSintatico$actions {
           case 44: // factor ::= IDENTIFIER 
             {
               Object RESULT =null;
-		 System.out.println("factor -> IDENTIFIER"); 
+		int ileft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object i = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		 
+    Identifier id = new Identifier((String)i);
+    if (!tabela.contains((String)i))
+        id.erroSemantico = true;
+
+    RESULT = id;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -796,7 +1013,12 @@ class CUP$AnalisadorSintatico$actions {
           case 45: // factor ::= constant 
             {
               Object RESULT =null;
-		 System.out.println("factor -> constant"); 
+		int cleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object c = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    RESULT = c;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -805,7 +1027,15 @@ class CUP$AnalisadorSintatico$actions {
           case 46: // factor ::= OPENPARCHAR expr CLOSEPARCHAR 
             {
               Object RESULT =null;
-		 System.out.println("factor -> (expr)"); 
+		int eleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)).value;
+		
+    Expr exp = (Expr)e; 
+    ParExpr pe = new ParExpr(exp);
+
+    RESULT = pe;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -814,7 +1044,15 @@ class CUP$AnalisadorSintatico$actions {
           case 47: // factor ::= NOT factor 
             {
               Object RESULT =null;
-		 System.out.println("factors -> NOT factor"); 
+		int fleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
+		
+    Expr fac = (Expr)f;
+    NotExpr ne = new NotExpr(fac);
+
+    RESULT = ne;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("factor",21, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.elementAt(CUP$AnalisadorSintatico$top-1)), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -826,7 +1064,10 @@ class CUP$AnalisadorSintatico$actions {
 		int ileft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int iright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object i = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-		 System.out.println("constant -> " + i); 
+		 
+    IntegerConstant ic = new IntegerConstant((int)i);
+    RESULT = ic;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -838,7 +1079,10 @@ class CUP$AnalisadorSintatico$actions {
 		int rleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int rright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object r = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-		 System.out.println("constant -> " + r); 
+		
+    RealConstant rc = new RealConstant((float)r);
+    RESULT = rc;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -850,7 +1094,10 @@ class CUP$AnalisadorSintatico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object c = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-		 System.out.println("constant -> '" + c + "'"); 
+		
+    CharConstant cc = new CharConstant((char)c);
+    RESULT = cc;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;
@@ -862,7 +1109,10 @@ class CUP$AnalisadorSintatico$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()).right;
 		Object b = (Object)((java_cup.runtime.Symbol) CUP$AnalisadorSintatico$stack.peek()).value;
-		 System.out.println("constant -> " + b); 
+		 
+    BooleanConstant bc = new BooleanConstant((boolean)b);
+    RESULT = bc;
+
               CUP$AnalisadorSintatico$result = parser.getSymbolFactory().newSymbol("constant",22, ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), ((java_cup.runtime.Symbol)CUP$AnalisadorSintatico$stack.peek()), RESULT);
             }
           return CUP$AnalisadorSintatico$result;

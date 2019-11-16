@@ -4,5 +4,7 @@ public enum Type {
 	INTEGER,
 	REAL,
 	BOOLEAN,
-	CHAR
+	CHAR,
+	VOID,
+	UNDEFINED
 }

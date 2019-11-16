@@ -15,7 +15,8 @@ public class StmtList {
 	
 	public void add(Stmt stmt) {
 		list.add(stmt);
-		erroSemantico |= stmt.erroSemantico;
+		System.err.println(stmt.getClass());
+		erroSemantico = erroSemantico || stmt.erroSemantico;
 	}
 	
 	public void addAll(StmtList anotherlist) {

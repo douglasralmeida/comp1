@@ -6,11 +6,7 @@ public class BooleanConstant extends Constant {
 	
 	public BooleanConstant(boolean newvalue) {
 		value = newvalue;
-	}
-
-	@Override
-	public void aceitar() {
-		// TODO Auto-generated method stub
-		
+		erroSemantico = false;
+		tipo = Type.BOOLEAN;
 	}
 }

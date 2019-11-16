@@ -11,6 +11,7 @@ public class DoUntilStmt extends Stmt {
 	public DoUntilStmt(ArrayList<Stmt> list, Expr newcond) {
 		cond = newcond;
 		stmt_list = list;
+		erroSemantico = false;
 	}
 
 

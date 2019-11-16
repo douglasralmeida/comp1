@@ -13,8 +13,15 @@ import arvoreSintaxe.*;
 
 class AnalisadorSintatico;
 
+/* Código a ser executado antes do início da análise sintática */
+init with {:
+    tabela = new TabelaSimbolos();
+:}
+
 /* Código Java personalizado para o analisador sintático */
 parser code {:
+    TabelaSimbolos tabela;
+
     protected void report_expected_token_ids(){
         List<Integer> ids = expected_token_ids();
         LinkedList<String> list = new LinkedList<String>();
@@ -47,8 +54,6 @@ parser code {:
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
-
-
 :}
 
 /* Terminais (tokens retornados pelo analisador léxico). */
@@ -75,51 +80,41 @@ start with program;
 
 /* Regras gramaticais */
 program ::= PROGRAM IDENTIFIER EOLCHAR dec_list:dl compound_stmt:cs {: 
-                DeclList lista = (DeclList)dl;
-                CompoundStmt compound = (CompoundStmt)cs;
+    CompoundStmt compound = (CompoundStmt)cs;
 
-                Program program = new Program(lista, compound);
-                if (program.erroSemantico)
-                	report_fatal_error("", null);
+    Program program = new Program(compound, tabela);
+    if (program.possuiErroSemantico())
+        report_fatal_error("", null);
 
-                RESULT = program;
-            :};
+    RESULT = program;
+:};
 
 dec_list ::= dec_list:dl EOLCHAR decl:d {:
-            DeclList decl_list;
-            DeclList lista = (DeclList)d;
+    Decl decl = (Decl)d;
 
-            if (dl == null)
-		    	decl_list = new DeclList();
-		    else
-		    	decl_list = (DeclList)dl;
-            decl_list.addAll(lista);
-
-            RESULT = decl_list;
-        :}
-        | decl:d {:
-            RESULT = d;
-        :};
+    for (String s: decl.lista)
+        tabela.add(new Simbolo(s, decl.type));
+:}
+| decl:d {:
+    RESULT = d;
+:};
 
 decl ::= ident_list:il DECCHAR type:t {:
-            DeclList dec_list = new DeclList();
-            ArrayList<String> lista = (ArrayList<String>)il;
+    ArrayList<String> lista = (ArrayList<String>)il;
+    Decl decl = new Decl(lista, (Type)t);
 
-            for (String s: lista)
-            	dec_list.add(new Decl(s, (Type)t));
-
-            RESULT = dec_list;
-        :};
+    RESULT = decl;
+:};
 
 ident_list ::= ident_list:il ENUMCHAR IDENTIFIER:nome  {:
-                ArrayList<String> lista = (ArrayList<String>)il;
-                lista.add((String)nome);
-            :}
-            | IDENTIFIER:nome  {: 
-                ArrayList<String> il = new ArrayList<String>();
-                il.add((String)nome);
-                RESULT = il;
-            :};
+    ArrayList<String> lista = (ArrayList<String>)il;
+    lista.add((String)nome);
+:}
+| IDENTIFIER:nome  {: 
+    ArrayList<String> il = new ArrayList<String>();
+    il.add((String)nome);
+    RESULT = il;
+:};
 
 type ::= INTEGER {:
         RESULT = Type.INTEGER;
@@ -135,80 +130,213 @@ type ::= INTEGER {:
     :};
 
 compound_stmt ::= BEGIN stmt_list:sl END {:
-                    StmtList lista = (StmtList)sl;
-                    CompoundStmt compound = new CompoundStmt(lista);
+    StmtList lista = (StmtList)sl;
+    CompoundStmt compound = new CompoundStmt(lista);
                     
-                    RESULT = compound;
-                :};
+    RESULT = compound;
+:};
 
 stmt_list ::= stmt_list:sl EOLCHAR stmt:s {:
-                StmtList stmt_list;
-                Stmt stmt = (Stmt)s;
+    StmtList stmt_list;
+    Stmt stmt = (Stmt)s;
 
-                if (sl == null)
-		    	    stmt_list = new StmtList();
-		        else
-		    	    stmt_list = (StmtList)sl;
-                stmt_list.add(s);
+    if (sl == null)
+        stmt_list = new StmtList();
+    else
+        stmt_list = (StmtList)sl;
+    stmt_list.add(stmt);
 
-                RESULT = stmt_list;
-            :}
-            | stmt:s {:
-                RESULT = s;
-            :};
+    RESULT = stmt_list;
+:}
+| stmt:s {:
+    Stmt stmt = (Stmt)s;
+    StmtList stmt_list = new StmtList();
 
-stmt ::= assign_stmt | if_stmt | loop_stmt | read_stmt | write_stmt | compound_stmt {: 
-        
-    :};
+    stmt_list.add(stmt);
 
-assign_stmt ::= IDENTIFIER ASSIGNCHAR expr {: System.out.println("assign_stmt -> IDENTIFIER := expr"); :};
+    RESULT = stmt_list;
+:};
+
+stmt ::= assign_stmt:as {:
+    RESULT = as;
+:}
+| if_stmt:is {: 
+    RESULT = is;
+:}
+| loop_stmt:ls {: 
+    RESULT = ls;
+:}
+| read_stmt:rs {: 
+    RESULT = rs;
+:}
+| write_stmt:ws  {: 
+    RESULT = ws;
+:}
+| compound_stmt:cs {: 
+    RESULT = cs;
+:};
+
+assign_stmt ::= IDENTIFIER:n ASSIGNCHAR expr:e {:
+    String nome = (String)n;
+    Expr exp = (Expr)e;
+    AssignStmt assign_stmt = new AssignStmt(nome, exp);
+
+    RESULT = assign_stmt;
+:};
 
 /* Conflito shift-reduce:
 if_stmt ::= IF cond THEN stmt
           | IF cond THEN stmt ELSE stmt; */
 
-if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a {: System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); :};
+if_stmt_a ::= IF cond THEN if_stmt_a ELSE if_stmt_a {:
 
-if_stmt_b ::= IF cond THEN stmt {: System.out.println("if_stmt -> IF cond THEN stmt"); :}
-            | IF cond THEN if_stmt_a ELSE if_stmt_b {: System.out.println("if_stmt -> IF cond THEN stmt ELSE stmt"); :};
+:};
 
-if_stmt ::= if_stmt_a | if_stmt_b;
+if_stmt_b ::= IF cond THEN stmt {:
 
-cond ::= expr {: System.out.println("cond -> expr"); :};
+:}
+| IF cond THEN if_stmt_a ELSE if_stmt_b {:
 
-loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix {: System.out.println("loop_stmt -> stmt_prefix DO stmt_list stmt_suffix"); :};
+:};
 
-stmt_prefix ::= WHILE cond {: System.out.println("stmt_prefix -> WHILE cond"); :}
-              | /* vazio */ {: System.out.println("stmt_prefix -> e"); :};
+if_stmt ::= if_stmt_a | if_stmt_b {:
 
-stmt_suffix ::= UNTIL cond {: System.out.println("stmt_suffix -> UNTIL cond"); :}
-              | END {: System.out.println("stmt_suffix -> e"); :};
+:};
 
-read_stmt ::= READ OPENPARCHAR ident_list CLOSEPARCHAR {: System.out.println("read_stmt -> READ(ident_list)"); :};
+cond ::= expr:e {:
+    Cond cond = new Cond((Expr)e);
+    RESULT = cond;
+:};
 
-write_stmt ::= WRITE OPENPARCHAR expr_list CLOSEPARCHAR {: System.out.println("write_stmt -> WRITE(expr_list)"); :};
+loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix {:
 
-expr_list ::= expr {: System.out.println("expr_list -> expr"); :}
-            | expr_list ENUMCHAR expr {: System.out.println("expr_list -> expr_list; expr"); :};
+:};
 
-expr ::= simple_expr {: System.out.println("expr -> simple_expr"); :}
-       | simple_expr RELOP:r simple_expr {: System.out.println("simple_expr RELOP simple_expr"); :};
+stmt_prefix ::= WHILE cond {:
 
-simple_expr ::= term {: System.out.println("simple_expr -> term"); :}
-              | simple_expr ADDOP:a term {: System.out.println("simple_expr ADDOP term"); :};
+:}
+| /* vazio */ {:
 
-term ::= factor_a {: System.out.println("term -> factor_a"); :}
-       | term MULOP factor_a {: System.out.println("term MULOP factor_a"); :};
+:};
 
-factor_a ::= MINUSCHAR factor {: System.out.println("factor_a -> -factor"); :}
-           | factor {: System.out.println("factor_a -> factor"); :};
+stmt_suffix ::= UNTIL cond {:
 
-factor ::= IDENTIFIER {: System.out.println("factor -> IDENTIFIER"); :}
-         | constant {: System.out.println("factor -> constant"); :}
-         | OPENPARCHAR expr CLOSEPARCHAR {: System.out.println("factor -> (expr)"); :}
-         | NOT factor {: System.out.println("factors -> NOT factor"); :};
+:}
+| END {:
 
-constant ::= INTEGER:i {: System.out.println("constant -> " + i); :}
-           | REAL:r {: System.out.println("constant -> " + r); :}
-           | CHAR:c {: System.out.println("constant -> '" + c + "'"); :}
-           | BOOLEAN:b {: System.out.println("constant -> " + b); :};
+:};
+
+read_stmt ::= READ OPENPARCHAR ident_list:il CLOSEPARCHAR {:
+    ArrayList<Identifier> lista = (ArrayList<Identifier>)il;
+    ReadStmt rs = new ReadStmt(lista);
+
+    RESULT = rs;
+:};
+
+write_stmt ::= WRITE OPENPARCHAR expr_list:el CLOSEPARCHAR {:
+    ArrayList<Expr> lista = (ArrayList<Expr>)el;
+    WriteStmt ws = new WriteStmt(lista);
+
+    RESULT = ws;
+:};
+
+expr_list ::= expr:e {:
+    Expr expr = (Expr)e;
+    ArrayList<Expr> lista = new ArrayList<Expr>();
+    lista.add(expr);
+
+    RESULT = lista;
+:}
+| expr_list:l ENUMCHAR expr:e {:
+    Expr expr = (Expr)e;
+    ArrayList<Expr> lista = (ArrayList<Expr>)l;
+    lista.add(expr);
+
+    RESULT = lista;
+:};
+
+expr ::= simple_expr:se {: 
+    RESULT = se;
+:}
+| simple_expr:see RELOP:r simple_expr:sed {:
+    Expr exp1 = (Expr)see;
+    Expr exp2 = (Expr)sed;
+    String relop = (String)r;
+    RelacExpr re = new RelacExpr(exp1, relop, exp2);
+
+    RESULT = re;
+:};
+
+simple_expr ::= term:t {:
+    RESULT = t;
+:}
+| simple_expr:se ADDOP:a term:t {:
+    Expr expr = (Expr)se;
+    Expr term = (Expr)t;
+    String addop = (String)a;
+    AddExpr ae = new AddExpr(expr, addop, term);
+
+    RESULT = ae;
+:};
+
+term ::= factor_a:f {:
+    RESULT = f;
+:}
+| term:t MULOP:m factor_a:f {:
+    Expr term = (Expr)t;
+    Expr factor = (Expr)f;
+    String mulop = (String)m;
+    MultiExpr me = new MultiExpr(term, mulop, factor);
+
+    RESULT = me;
+:};
+
+factor_a ::= MINUSCHAR factor:f {:
+    Expr fac = (Expr)f;
+    MinusExpr me = new MinusExpr(fac);
+
+    RESULT = me;
+:}
+| factor:f {:
+    RESULT = f;
+:};
+
+factor ::= IDENTIFIER:i {: 
+    Identifier id = new Identifier((String)i);
+    if (!tabela.contains((String)i))
+        id.erroSemantico = true;
+
+    RESULT = id;
+:}
+| constant:c {:
+    RESULT = c;
+:}
+| OPENPARCHAR expr:e CLOSEPARCHAR {:
+    Expr exp = (Expr)e; 
+    ParExpr pe = new ParExpr(exp);
+
+    RESULT = pe;
+:}
+| NOT factor:f {:
+    Expr fac = (Expr)f;
+    NotExpr ne = new NotExpr(fac);
+
+    RESULT = ne;
+:};
+
+constant ::= INTEGER:i {: 
+    IntegerConstant ic = new IntegerConstant((int)i);
+    RESULT = ic;
+:}
+| REAL:r {:
+    RealConstant rc = new RealConstant((float)r);
+    RESULT = rc;
+:}
+| CHAR:c {:
+    CharConstant cc = new CharConstant((char)c);
+    RESULT = cc;
+:}
+| BOOLEAN:b {: 
+    BooleanConstant bc = new BooleanConstant((boolean)b);
+    RESULT = bc;
+:};

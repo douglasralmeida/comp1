@@ -6,12 +6,7 @@ public class CharConstant extends Constant {
 
 	public CharConstant(char newvalue) {
 		value = newvalue;
-	}
-
-	@Override
-	public void aceitar() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+		erroSemantico = false;
+		tipo = Type.CHAR;
+	}	
 }

@@ -6,12 +6,7 @@ public class RealConstant extends Constant {
 	
 	public RealConstant(float newvalue) {
 		value = newvalue;
+		erroSemantico = false;
+		tipo = Type.REAL;
 	}
-
-	@Override
-	public void aceitar() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -6,11 +6,7 @@ public class IntegerConstant extends Constant {
 
 	public IntegerConstant(int newvalue) {
 		value = newvalue;
-	}
-
-	@Override
-	public void aceitar() {
-		// TODO Auto-generated method stub
-		
+		erroSemantico = false;
+		tipo = Type.INTEGER;
 	}
 }

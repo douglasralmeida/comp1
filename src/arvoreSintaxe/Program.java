@@ -1,16 +1,17 @@
 package arvoreSintaxe;
 
 public class Program {
-
-	public DeclList dec_list;
 	
 	public CompoundStmt compound_stmt;
 	
-	public boolean erroSemantico;
+	public TabelaSimbolos tabela;
 	
-	public Program(DeclList list, CompoundStmt stmt) {		
-		dec_list = list;
+	public Program(CompoundStmt stmt, TabelaSimbolos tab) {		
 		compound_stmt = stmt;
-		erroSemantico = list.erroSemantico || stmt.erroSemantico;
+		tabela = tab;
+	}
+	
+	public boolean possuiErroSemantico() {
+		return tabela.erroSemantico || compound_stmt.erroSemantico;
 	}
 }

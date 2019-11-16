@@ -11,6 +11,7 @@ public class WhileStmt extends Stmt {
 	public WhileStmt(Expr newcond, ArrayList<Stmt> list) {
 		cond = newcond;
 		stmt_list = list;
+		erroSemantico = false;
 	}
 
 }

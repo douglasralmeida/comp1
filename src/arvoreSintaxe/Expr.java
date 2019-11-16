@@ -2,6 +2,8 @@ package arvoreSintaxe;
 
 public abstract class Expr {
 	
-	public abstract void aceitar();
+	public boolean erroSemantico;
+	
+	public Type tipo; 
 	
 }

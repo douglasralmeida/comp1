@@ -6,12 +6,7 @@ public class ParExpr extends Expr {
 	
 	public ParExpr(Expr exp) {
 		expression = exp;
+		tipo = exp.tipo;
+		erroSemantico = exp.erroSemantico;
 	}
-
-	@Override
-	public void aceitar() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
