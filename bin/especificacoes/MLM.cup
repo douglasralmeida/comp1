@@ -54,8 +54,6 @@ parser code {:
         System.out.println(String.format("Um erro de sintaxe foi encontrado com a expressao \"%s\" na linha %d, coluna %d.", cs.getName(), cs.xleft.getLine(), cs.xleft.getColumn()));
         report_expected_token_ids();
     };
-
-
 :}
 
 /* Terminais (tokens retornados pelo analisador léxico). */
@@ -87,7 +85,6 @@ program ::= PROGRAM IDENTIFIER EOLCHAR dec_list:dl compound_stmt:cs {:
     Program program = new Program(compound, tabela);
     if (program.possuiErroSemantico())
         report_fatal_error("", null);
-    tabela.show();
 
     RESULT = program;
 :};
@@ -133,11 +130,11 @@ type ::= INTEGER {:
     :};
 
 compound_stmt ::= BEGIN stmt_list:sl END {:
-                    StmtList lista = (StmtList)sl;
-                    CompoundStmt compound = new CompoundStmt(lista);
+    StmtList lista = (StmtList)sl;
+    CompoundStmt compound = new CompoundStmt(lista);
                     
-                    RESULT = compound;
-                :};
+    RESULT = compound;
+:};
 
 stmt_list ::= stmt_list:sl EOLCHAR stmt:s {:
     StmtList stmt_list;
@@ -206,8 +203,9 @@ if_stmt ::= if_stmt_a | if_stmt_b {:
 
 :};
 
-cond ::= expr {:
-
+cond ::= expr:e {:
+    Cond cond = new Cond((Expr)e);
+    RESULT = cond;
 :};
 
 loop_stmt ::= stmt_prefix DO stmt_list stmt_suffix {:
@@ -229,25 +227,30 @@ stmt_suffix ::= UNTIL cond {:
 :};
 
 read_stmt ::= READ OPENPARCHAR ident_list:il CLOSEPARCHAR {:
-    ArrayList<String> lista = (ArrayList<String>)il;
+    ArrayList<Identifier> lista = (ArrayList<Identifier>)il;
+    ReadStmt rs = new ReadStmt(lista);
 
+    RESULT = rs;
 :};
 
 write_stmt ::= WRITE OPENPARCHAR expr_list:el CLOSEPARCHAR {:
     ArrayList<Expr> lista = (ArrayList<Expr>)el;
+    WriteStmt ws = new WriteStmt(lista);
+
+    RESULT = ws;
 :};
 
 expr_list ::= expr:e {:
-    Expr exp = (Expr)e;
+    Expr expr = (Expr)e;
     ArrayList<Expr> lista = new ArrayList<Expr>();
-    lista.add(exp);
+    lista.add(expr);
 
     RESULT = lista;
 :}
 | expr_list:l ENUMCHAR expr:e {:
     Expr expr = (Expr)e;
     ArrayList<Expr> lista = (ArrayList<Expr>)l;
-    lista.add(e);
+    lista.add(expr);
 
     RESULT = lista;
 :};
@@ -256,8 +259,8 @@ expr ::= simple_expr:se {:
     RESULT = se;
 :}
 | simple_expr:see RELOP:r simple_expr:sed {:
-    Expr expr1 = (Expr)see;
-    Expr expr2 = (Expr)sed;
+    Expr exp1 = (Expr)see;
+    Expr exp2 = (Expr)sed;
     String relop = (String)r;
     RelacExpr re = new RelacExpr(exp1, relop, exp2);
 
@@ -277,7 +280,7 @@ simple_expr ::= term:t {:
 :};
 
 term ::= factor_a:f {:
-    RESULT f;
+    RESULT = f;
 :}
 | term:t MULOP:m factor_a:f {:
     Expr term = (Expr)t;
@@ -300,7 +303,7 @@ factor_a ::= MINUSCHAR factor:f {:
 
 factor ::= IDENTIFIER:i {: 
     Identifier id = new Identifier((String)i);
-    if (!tabela.contains(i))
+    if (!tabela.contains((String)i))
         id.erroSemantico = true;
 
     RESULT = id;
@@ -310,7 +313,7 @@ factor ::= IDENTIFIER:i {:
 :}
 | OPENPARCHAR expr:e CLOSEPARCHAR {:
     Expr exp = (Expr)e; 
-    ParExp pe = new ParExp(exp);
+    ParExpr pe = new ParExpr(exp);
 
     RESULT = pe;
 :}
@@ -322,12 +325,12 @@ factor ::= IDENTIFIER:i {:
 :};
 
 constant ::= INTEGER:i {: 
-    IntegerContant ic = new IntegerConstant((int)i);
+    IntegerConstant ic = new IntegerConstant((int)i);
     RESULT = ic;
 :}
 | REAL:r {:
     RealConstant rc = new RealConstant((float)r);
-    RESULT = tc;
+    RESULT = rc;
 :}
 | CHAR:c {:
     CharConstant cc = new CharConstant((char)c);
